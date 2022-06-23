@@ -1,0 +1,17 @@
+﻿<UserControl x:Class="SharpTracer.View.Controls.Icon"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:diag="clr-namespace:System.Diagnostics;assembly=mscorlib"
+        xmlns:local="clr-namespace:SharpTracer.View.Controls"
+        mc:Ignorable="d" Width="{Binding Size}" Height="{Binding Size}">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+	</UserControl.Resources>
+	<Grid>
+		<TextBlock FontFamily="Segoe MDL2 Assets" Text="{Binding BottomLayer}" Foreground="DimGray" FontSize="{Binding Size}" Visibility="{Binding Source={x:Static diag:Debugger.IsAttached}, Converter={StaticResource BoolToVisibilityConverter}}"/>
+		<TextBlock FontFamily="Segoe MDL2 Assets" Text="{Binding BottomLayer}" Foreground="{Binding BottomColour}" FontSize="{Binding Size}" />
+		<TextBlock FontFamily="Segoe MDL2 Assets" Text="{Binding TopLayer}" Foreground="{Binding TopColour}"  FontSize="{Binding Size}" />
+	</Grid>
+</UserControl>

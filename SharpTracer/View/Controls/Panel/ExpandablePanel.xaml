@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="SharpTracer.View.Controls.ExpandablePanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SharpTracer.View.Controls"
+             mc:Ignorable="d" MinHeight="100"
+			 d:DesignHeight="450" d:DesignWidth="300">
+    <!-- Expander Stroryboard -->
+    <UserControl.Resources>
+        <Storyboard x:Key="ExpandAnim">
+            <DoubleAnimation
+          Name="ExpandWidth"
+          Storyboard.TargetName="ContentPanel"
+          Storyboard.TargetProperty="Width"
+          From="0"
+          To="{Binding AvailableWidth}"
+          Duration="0:0:0.3"
+          AutoReverse="False">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+		<Storyboard x:Key="CollapseAnim">
+			<DoubleAnimation
+          Name="CollapseWidth"
+          Storyboard.TargetName="ContentPanel"
+          Storyboard.TargetProperty="Width"
+          From="{Binding AvailableWidth}"
+          To="0"
+          Duration="0:0:0.2"
+          AutoReverse="False">
+                <DoubleAnimation.EasingFunction>
+                    <ExponentialEase EasingMode="EaseOut"/>
+                </DoubleAnimation.EasingFunction>
+            </DoubleAnimation>
+        </Storyboard>
+    </UserControl.Resources>
+
+	<DockPanel>
+		<DockPanel DockPanel.Dock="Left">
+			<!--Replacement expander Icons -->
+			<Expander	DockPanel.Dock="Top"
+						IsExpanded="{Binding Expanded}"
+							Name="DockExpand"
+                            ExpandDirection="Left"
+                            Padding="0"
+                            VerticalAlignment="Center"
+							HorizontalAlignment="Center"
+                        Height="25">
+				
+				<Expander.Triggers>
+					<EventTrigger RoutedEvent="Expander.Expanded">
+						<EventTrigger.Actions>
+							<BeginStoryboard Storyboard="{StaticResource ExpandAnim}"/>
+						</EventTrigger.Actions>
+					</EventTrigger>
+					<EventTrigger RoutedEvent="Expander.Collapsed">
+						<EventTrigger.Actions>
+							<BeginStoryboard Storyboard="{StaticResource CollapseAnim}"/>
+						</EventTrigger.Actions>
+					</EventTrigger>
+				</Expander.Triggers>
+			</Expander>
+			<ListView DockPanel.Dock="Top"  ItemsSource="{Binding Tabs}" SelectedItem="{Binding SelectedTab}" BorderThickness="0">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<local:ImageTabHead/>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+			<Thumb Opacity="0" RenderTransformOrigin="0,0"  />
+			<!-- needs to have style to change chevron on mouse enter/leave -->
+		</DockPanel>
+		<DockPanel x:Name="ContentPanel"   Visibility="{Binding Visibility}" Width="{Binding Width}">
+			<local:PanelTab DataContext="{Binding SelectedTab}"/>
+		</DockPanel>
+	</DockPanel>
+</UserControl>

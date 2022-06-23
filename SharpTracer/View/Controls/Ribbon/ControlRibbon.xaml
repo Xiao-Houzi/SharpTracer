@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="SharpTracer.View.Controls.ControlRibbon"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SharpTracer.View.Controls"
+             mc:Ignorable="d"
+             d:DesignWidth="1000" d:DesignHeight ="100">
+    <UserControl.Resources>
+        <DataTemplate DataType="{x:Type local:RibbonGroupVM}">
+            <local:RibbonGroup/>
+        </DataTemplate>
+
+        <ItemsPanelTemplate x:Key="ItemsPanelTemplate1">
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,0"/>
+        </ItemsPanelTemplate>
+    </UserControl.Resources>
+
+    <DockPanel MinHeight="64" Background="{StaticResource Aelfcraeft.Theme.WindowBackground}">
+        <Border BorderThickness="0" BorderBrush="LightGray" Padding="5">
+            <StackPanel Margin="0" >
+                <ItemsControl ItemsSource="{Binding Groups}"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  Margin="0"
+                  ItemsPanel="{StaticResource ItemsPanelTemplate1}" />
+            </StackPanel>
+        </Border>
+    </DockPanel>
+</UserControl>

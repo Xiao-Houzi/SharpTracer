@@ -1,0 +1,70 @@
+﻿<UserControl x:Class="SharpTracer.GeometryControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:local="clr-namespace:SharpTracer"
+             mc:Ignorable="d" d:DesignWidth="128"
+			 Loaded="UserControl_Loaded">
+	<DockPanel>
+
+		<Button Height="22" Content="Reset View" Command="{Binding ResetView}" DockPanel.Dock="Top"/>
+		<Border BorderBrush="Gray" Background="WhiteSmoke"  BorderThickness="1" Padding="0"  DockPanel.Dock="Top">
+			<DockPanel  Margin="0" DockPanel.Dock="Top">
+				<Label Content="View Controls" DockPanel.Dock="Top" Padding="0" Background="Black" Foreground="AliceBlue"/>
+				<DockPanel LastChildFill="False"  DockPanel.Dock="Top">
+					<TextBlock Text="Zoom"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="1" Maximum="10" Orientation="Horizontal" Value="{Binding Zoom}"/>
+					<TextBlock Text="FOV"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="0.1" Maximum="3.0" Orientation="Horizontal" Value="{Binding FOV}"/>
+					<TextBlock Text="Pointsize"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="1" Maximum="5" SmallChange="1" TickFrequency="1" Foreground="Black" IsSnapToTickEnabled="True" TickPlacement="TopLeft" Orientation="Horizontal" Value="{Binding Pointsize}"/>
+					<TextBlock Text="Confidence"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="0.0" Maximum="1.0" SmallChange=".01" TickFrequency=".142" TickPlacement="TopLeft" Foreground="Black" Orientation="Horizontal" Value="{Binding Confidence}"/>
+					<TextBlock Text="Range"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+					<StackPanel Orientation="Horizontal"  DockPanel.Dock="Top" >
+						<TextBlock Text="{Binding Near}"  Padding="0"/>
+						<TextBlock Text=" - "  Padding="0"/>
+						<TextBlock Text="{Binding Far}"  Padding="0"/>
+					</StackPanel>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="1" Maximum="8000" Value="{Binding Near}"/>
+					<Slider DockPanel.Dock="Top" Margin ="0" Minimum="1" Maximum="8000" Value="{Binding Far}"/>
+				</DockPanel>
+			</DockPanel>
+		</Border>
+
+		<Border BorderBrush="Gray" Background="WhiteSmoke"  BorderThickness="1" Padding="0"  DockPanel.Dock="Top">
+			<DockPanel Margin="0">
+				<Label Content="Frequency" DockPanel.Dock="Top" Padding="0" Background="Black" Foreground="AliceBlue"/>
+				
+				<TextBlock Text="clouds"  Padding="0" DockPanel.Dock="Top" HorizontalAlignment="Center"/>
+				<DockPanel LastChildFill="False"  DockPanel.Dock="Top">
+					<Button Name="fc0" Width="32" Height="20" Content="1" Command="{Binding GeometryFreq}" CommandParameter="1"/>
+					<Button Name="fc1" Width="32" Height="20" Content="2" Command="{Binding GeometryFreq}" CommandParameter="2"/>
+					<Button Name="fc2" Width="32" Height="20" Content="4" Command="{Binding GeometryFreq}" CommandParameter="4"/>
+					<Button Name="fc3" Width="32" Height="20" Content="8" Command="{Binding GeometryFreq}" CommandParameter="8"/>
+				</DockPanel>
+				<StackPanel>
+					
+				<Button Height="22" Width="96" Content="Isolate Gizmos" Command="{Binding ShowGizmos}"/>
+				<Button Height="22" Width="96" Content="Single Entity" Command="{Binding ShowSingle}"/>
+				</StackPanel>
+
+			</DockPanel>
+		</Border>
+
+		<Border BorderBrush="Gray" Background="WhiteSmoke"  BorderThickness="1" Padding="0" DockPanel.Dock="Top">
+			<DockPanel  Margin="0">
+				<Label Content="play" DockPanel.Dock="Top" Padding="0" Background="Black" Foreground="AliceBlue"/>
+				<DockPanel LastChildFill="False" Margin="0" DockPanel.Dock="Top">
+					<Button Name="time1" Height="20" Width="32" Content=".25" />
+					<Button Name="time2" Height="20" Width="32" Content=".33" />
+					<Button Name="time3" Height="20" Width="32" Content=".50" />
+					<Button Name="time4" Height="20" Width="32" Content="1" />
+				</DockPanel>
+				<Button Name="Play" Height="20" Width="96" Margin="0" Content="play" DockPanel.Dock="Top"/>
+				<Slider x:Name="Time" DockPanel.Dock="Bottom" Margin ="0" Minimum="0" Maximum="60" Orientation="Horizontal" Value="{Binding Time}"/>
+			</DockPanel>
+		</Border>
+	</DockPanel>
+</UserControl>

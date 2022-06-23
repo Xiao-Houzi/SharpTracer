@@ -1,0 +1,164 @@
+﻿<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SharpTracer.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="AelfcraeftLightTheme.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="AelfcraeftTheme">
+        <Style.Resources>
+            <!-- Colour Pre Definitions    -->
+            <Color x:Key="Aelfcraeft.Theme.DarkGrey" A="#FF" R="#2B" G="#2B" B="#28"/>
+            <Color x:Key="Aelfcraeft.Theme.MidGrey"  A="#FF" R="#82" G="#7F" B="#77"/>
+            <Color x:Key="Aelfcraeft.Theme.Red"  A="#FF" R="#A3" G="#26" B="#38"/>
+            <Color x:Key="Aelfcraeft.Theme.Yellow"  A="#FF" R="#E5" G="#C4" B="#14"/>
+            <Color x:Key="Aelfcraeft.Theme.Cream"  A="#FF" R="#E8" G="#E2" B="#D6"/>
+
+
+            <!-- Brush Pre Definitions -->
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.WindowBackground" Color="Transparent"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.ControlBorder" Color="{StaticResource Aelfcraeft.Theme.DarkGrey}"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.ControlFore" Color="#FF000000"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.DisabledBack" Color="Transparent"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.DisabledFore" Color="#FF606060"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.DisabledBorder" Color="#FF282828"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.Focus" Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.MouseOverBack" Color="#FFAAAACC"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.MouseOverFore" Color="{StaticResource Aelfcraeft.Theme.Yellow}"/>
+            <SolidColorBrush x:Key="Aelfcraeft.Theme.MouseOverBorder" Color="#FF604040"/>
+
+        </Style.Resources>
+    </Style>
+
+    <!--General Window Style -->
+    <Style TargetType="Window">
+        <Setter Property="FontFamily" Value="Segoe UI Symbol" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="{StaticResource Aelfcraeft.Theme.WindowBackground}" />
+        <Setter Property="Foreground" Value="{StaticResource Aelfcraeft.Theme.ControlFore}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Aelfcraeft.Theme.ControlBorder}"/>
+    </Style>
+
+    <!-- Style Focus Visual -->
+    <Style x:Key="FocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle
+                            Margin="2" 
+                            SnapsToDevicePixels="true" 
+                            Stroke="{StaticResource Aelfcraeft.Theme.Focus}" 
+                            StrokeThickness="1" 
+                            StrokeDashArray="1 2"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Button-->
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource Aelfcraeft.Theme.WindowBackground}" />
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Aelfcraeft.Theme.ControlBorder}"/>
+        <Setter Property="Foreground" Value="{StaticResource Aelfcraeft.Theme.ControlFore}"/>
+
+        <Setter Property="Padding" Value="1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border 
+                            x:Name="border"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}"
+                            SnapsToDevicePixels="true">
+                        <ContentPresenter 
+                                x:Name="contentPresenter"
+                                Focusable="False" 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="{TemplateBinding Padding}" 
+                                RecognizesAccessKey="True" 
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" 
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.MouseOverBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.MouseOverBorder}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBorder}"/>
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBorder}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Aelfcraeft.Theme.DisabledFore}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Button Style 2 -->
+    <Style x:Key="SmallButton" BasedOn = "{StaticResource RibbonCommandStyle}" TargetType="Button">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Aelfcraeft.Theme.ControlBorder}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5,1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="border"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                        <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.MouseOverBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.MouseOverFore}"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledFore}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Background" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBack}"/>
+                            <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Aelfcraeft.Theme.DisabledBorder}"/>
+                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Aelfcraeft.Theme.DisabledFore}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Datta Template Definitions -->
+    <DataTemplate x:Key="LogTemplate">
+        <DockPanel Width="Auto" HorizontalAlignment="Stretch">
+            <TextBlock Text="{Binding MessageIcon}" Name="img" ToolTip="Icon" HorizontalAlignment="Center" />
+            <TextBlock Text="{Binding Message}" Width="Auto" Margin="4,0,0,0" TextWrapping="Wrap"/>
+        </DockPanel>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type local:LogList}">
+        <local:LogTab/>
+    </DataTemplate>
+
+</ResourceDictionary>

@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="SharpTracer.View.Controls.RibbonCommand"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d">
+    <StackPanel>
+        <Button Width="Auto" Height="64" Command="{Binding Command}">
+            <DockPanel MaxWidth="64" MinWidth="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Height="60">
+                <TextBlock DockPanel.Dock="Bottom" Name="Title" Text="{Binding Title}" 
+						   FontSize="11" LineHeight="11" Padding="1" LineStackingStrategy="BlockLineHeight" 
+						   TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top" Height="22" ToolTip="{Binding Tooltip}"/>
+				<TextBlock DockPanel.Dock="Top" Name="Graphic" Text="{Binding Image}" 
+						   FontFamily="Segoe UI Symbol" FontSize="24" LineHeight="20" Padding="0" 
+						   TextAlignment="Center" ToolTip="{Binding Tooltip}"/>
+            </DockPanel>
+        </Button>
+    </StackPanel>
+</UserControl>

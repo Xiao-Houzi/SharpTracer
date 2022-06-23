@@ -1,0 +1,25 @@
+﻿<Window x:Class="SharpTracer.View.MainWindow"
+   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:SharpTracer"
+	xmlns:controls="clr-namespace:SharpTracer.View.Controls"
+	xmlns:engine="clr-namespace:SharpEngine"
+	xmlns:behaviour="clr-namespace:SharpTracer.Base.Behaviours"
+   mc:Ignorable="d"
+   Title="SharpTracer" 
+	WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen" 
+	behaviour:WindowClosingBehavior.Closing="{Binding CommandCloseApp}"
+	WindowState="Maximized" d:DesignWidth="1440" d:DesignHeight="900" Closing="Window_Closing" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
+	<Grid>
+		<DockPanel>
+			<controls:HeaderBar DockPanel.Dock="Top"		DataContext="{Binding Header}"/>
+			
+			<local:StatusPanel DockPanel.Dock="Bottom" DataContext="{Binding Status}"/>
+			<controls:GeometryViewControls DockPanel.Dock="Left"		DataContext="{Binding Controls}"/>
+			<controls:ExpandablePanel DockPanel.Dock="Right"  	DataContext="{Binding ExpandablePanel}" />
+			<engine:GL3DView DockPanel.Dock="Left" Renderer="{Binding Renderer}"/>
+		</DockPanel>
+	</Grid>
+</Window>

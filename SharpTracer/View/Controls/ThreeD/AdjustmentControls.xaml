@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="SharpTracer.AdjustmentControls"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SharpTracer"
+             mc:Ignorable="d" >
+	<DockPanel>
+		<Border BorderBrush="DimGray" Background="WhiteSmoke"  BorderThickness="1" Padding="0" Margin="0">
+			<StackPanel>
+				<StackPanel Margin="0">
+					<Label Content="{Binding Title}" HorizontalContentAlignment="Center" DockPanel.Dock="Top" Height="20" Padding="0" Background="Black" Foreground="White"/>
+					<Grid DockPanel.Dock="bottom" >
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="42"/>
+							<ColumnDefinition Width="42"/>
+							<ColumnDefinition Width="42"/>
+						</Grid.ColumnDefinitions>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="40"/>
+							<RowDefinition Height="15"/>
+							<RowDefinition Height="40"/>
+						</Grid.RowDefinitions>
+
+						<Button Content="{Binding Axes[0].Value}" Foreground="{Binding Axes[0].Col}" Background="{Binding  Axes[0].Bak}" Width="30" Height="30" Grid.Column="0" Grid.Row="0" Command="{Binding Click}" CommandParameter="{Binding Axes[0]}"/>
+						<Button Content="{Binding Axes[1].Value}" Foreground="{Binding Axes[1].Col}" Background="{Binding  Axes[1].Bak}" Width="30" Height="30" Grid.Column="0" Grid.Row="1" Command="{Binding Click}" CommandParameter="{Binding Axes[1]}"/>
+						<Button Content="{Binding Axes[2].Value}" Foreground="{Binding Axes[2].Col}" Background="{Binding  Axes[2].Bak}" Width="30" Height="30" Grid.Column="0" Grid.Row="2" Command="{Binding Click}"  CommandParameter="{Binding Axes[2]}" />
+
+						<Button Content="{Binding Axes[3].Value}" Foreground="{Binding Axes[3].Col}" Background="{Binding Axes[3].Bak}" Width="30" Height="30" Grid.Column="1" Grid.Row="0"  Command="{Binding Click}"  CommandParameter="{Binding Axes[3]}"/>
+						<Button Content="{Binding Axes[4].Value}" Foreground="{Binding Axes[4].Col}" Background="{Binding Axes[4].Bak}" Width="30" Height="30" Grid.Column="1" Grid.Row="1" Command="{Binding Click}"   CommandParameter="{Binding Axes[4]}"/>
+						<Button Content="{Binding Axes[5].Value}" Foreground="{Binding Axes[5].Col}" Background="{Binding Axes[5].Bak}" Width="30" Height="30" Grid.Column="1" Grid.Row="2" Command="{Binding Click}"  CommandParameter="{Binding Axes[5]}"/>
+
+						<Button Content="{Binding Axes[6].Value}" Foreground="{Binding Axes[6].Col}" Background="{Binding Axes[6].Bak}" Width="30" Height="30" Grid.Column="2" Grid.Row="0"  Command="{Binding Click}"  CommandParameter="{Binding Axes[6]}"/>
+						<Button Content="{Binding Axes[7].Value}" Foreground="{Binding Axes[7].Col}" Background="{Binding Axes[7].Bak}" Width="30" Height="30" Grid.Column="2" Grid.Row="1" Command="{Binding Click}"   CommandParameter="{Binding Axes[7]}"/>
+						<Button Content="{Binding Axes[8].Value}" Foreground="{Binding Axes[8].Col}" Background="{Binding Axes[8].Bak}" Width="30" Height="30" Grid.Column="2" Grid.Row="2"  Command="{Binding Click}"  CommandParameter="{Binding Axes[8]}"/>
+
+						<Button Content="{Binding Axes[9].Value}" Foreground="{Binding Axes[9].Col}" Background="{Binding Axes[9].Bak}" Width="30" Height="30" Grid.Column="0" Grid.Row="4"  Command="{Binding Click}"  CommandParameter="{Binding Axes[9]}"/>
+						<Button Content="{Binding Axes[10].Value}" Foreground="{Binding Axes[10].Col}" Background="{Binding Axes[10].Bak}" Width="30" Height="30" Grid.Column="1" Grid.Row="4" Command="{Binding Click}"   CommandParameter="{Binding Axes[10]}"/>
+						<Button Content="{Binding Axes[11].Value}" Foreground="{Binding Axes[11].Col}" Background="{Binding Axes[11].Bak}" Width="30" Height="30" Grid.Column="2" Grid.Row="4" Command="{Binding Click}"  CommandParameter="{Binding Axes[11]}"/>
+
+						<TextBlock Text="{Binding Chirality}" Background="{Binding ValidMatrix}" Grid.Row="3" Grid.ColumnSpan="3"/>
+					</Grid>
+
+				</StackPanel>
+				<local:Matrix DataContext="{Binding Matrix}"/>
+				<local:Matrix3 DataContext="{Binding Matrix3}"/>
+			</StackPanel>
+		</Border>
+	</DockPanel>
+</UserControl>
