@@ -7,5 +7,5 @@ out vec4 fColor;
 
 void main()
 {
-     fColor = vColor * Data[0];
+     fColor = vColor;
 }

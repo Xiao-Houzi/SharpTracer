@@ -19,7 +19,7 @@ void main()
     vec4 pos =  uProjMatrix * uViewMatrix * uModelMatrix * vec4(Position, 1.0);
 
     gl_Position = pos;
-    gl_PointSize = 1.0;
+    gl_PointSize = 50.0;
     vColor = Color;
     Data = uData;
     vUV = UV;

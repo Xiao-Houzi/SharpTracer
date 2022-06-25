@@ -1,22 +1,22 @@
 ﻿using System;
 using System.ComponentModel;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Model.Events;
 using SharpGL;
 using System.Threading.Tasks;
 using GlmSharp;
 using System.Collections.Generic;
 using System.Windows;
 using SharpTracer.Base;
-using SharpEngine.Engine.Graphics;
 using SharpTracer.Model;
-using SharpTracer.RendererScripting.States;
-using SharpTracer.RendererScripting;
+using SharpTracer.Scripting.States;
+using SharpTracer.Scripting;
 using SharpTracer.View.Controls;
+using SharpTracer.Engine.Scene;
 
 namespace SharpTracer
 {
 
-	public partial class SharpTracerModel : NotificationBase
+    public partial class SharpTracerModel : NotificationBase
 	{
 		#region Properties
 		public Project Project
@@ -55,7 +55,7 @@ namespace SharpTracer
 		{
 			get; internal set;
 		}
-		public static Entity SelectedEntity
+		public static Entity? SelectedEntity
 		{
 			get;
 			set;
@@ -108,9 +108,8 @@ namespace SharpTracer
 		}
 		#endregion
 
-
-		public SharpTracerModel(string logName)
-		{
+		public SharpTracerModel()
+        {
 			Keys = new Dictionary<string, bool>()
 			{
 				{"Forward", false },
@@ -126,8 +125,8 @@ namespace SharpTracer
 			Speed = 2;
 			GeometryFreq = 1;
 			Renderer = new ViewRenderer(this);
-			Renderer.AddState(new ViewState());
-			Renderer.SetCurrentState(typeof(ViewState));
+			Renderer.AddState(new ProjectState());
+			Renderer.SetCurrentState(typeof(ProjectState));
 			_project = new Project();
 			_project.CurrentEntity = new Entity();
 
@@ -139,6 +138,10 @@ namespace SharpTracer
 
 			Near = 100;
 			Far = 8000;
+		}
+		public SharpTracerModel(string logName) : this()
+		{
+			
 		}
 
 		private void AdjustChanged(object sender, PropertyChangedEventArgs e)
@@ -199,23 +202,9 @@ namespace SharpTracer
 					break;
 
 				case SharpTracerUIArgs.EventReason.AdjustmentMatrixChanged:
-					Adjust.Matrix = (mat4)args.DataObject;
-					ViewState.CurrentMatrix = Adjust.Matrix;
 					break;
 
 				case SharpTracerUIArgs.EventReason.AdjustmentAdjustChanged:
-					Adjust.DepthAdjustment = (mat3)args.DataObject;
-					mat4 temp = new mat4();
-					temp[0, 0] = Adjust.DepthAdjustment[0, 0];
-					temp[0, 1] = Adjust.DepthAdjustment[0, 1];
-					temp[0, 2] = Adjust.DepthAdjustment[0, 2];
-					temp[1, 0] = Adjust.DepthAdjustment[1, 0];
-					temp[1, 1] = Adjust.DepthAdjustment[1, 1];
-					temp[1, 2] = Adjust.DepthAdjustment[1, 2];
-					temp[2, 0] = Adjust.DepthAdjustment[2, 0];
-					temp[2, 1] = Adjust.DepthAdjustment[2, 1];
-					temp[2, 2] = Adjust.DepthAdjustment[2, 2];
-					ViewState.CurrentMatrix = temp;
 					break;
 				case SharpTracerUIArgs.EventReason.CommandCleanupProject:
 					FilterGeometrys();
@@ -240,14 +229,14 @@ namespace SharpTracer
 				Renderer.CurrentState.Layers["PTX"].Clear();
 				Renderer.CurrentState.Layers["Bin"].Clear();
 				Project.Entities.Clear();
-				Renderer.SetCurrentState(typeof(ViewState));
+				Renderer.SetCurrentState(typeof(ProjectState));
 			}
 		}
 
 		private void OpenProject(Uri path, bool binary = true)
 		{
 			this.path = path;
-			Renderer.SetCurrentState(typeof(ViewState));
+			Renderer.SetCurrentState(typeof(ProjectState));
 			if (GL == null)
 			{
 				if (binary)

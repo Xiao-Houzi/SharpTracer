@@ -1,5 +1,5 @@
 ﻿using SharpTracer.Base;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Model.Events;
 using SharpTracer.View;
 using SharpTracer.ViewModels;
 using System;

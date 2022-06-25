@@ -5,6 +5,8 @@ using System.Linq;
 using System.Windows;
 using SharpEngine.Engine.Graphics;
 using SharpGL;
+using SharpTracer.Engine;
+using SharpTracer.Engine.Graphics;
 
 namespace SharpEngine.Engine
 {

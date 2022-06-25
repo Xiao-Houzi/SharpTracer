@@ -100,12 +100,16 @@ namespace SharpEngine
 			Cursor = Cursors.None;
 
 			sx = pos.X;
-			sy = pos.Y+23;
+			sy = pos.Y;
 		}
 
 		private void UserControl_MouseUp(object sender, MouseButtonEventArgs e)
 		{
-			SetCursorPos((int)sx, (int)sy);
+			Point loc = PointToScreen(new Point(0, 0));
+			PresentationSource source = PresentationSource.FromVisual(this);
+			Point targetPoints = source.CompositionTarget.TransformFromDevice.Transform(loc);
+
+			SetCursorPos((int)(sx + targetPoints.X), (int)(sy + targetPoints.Y));
 			Cursor = Cursors.Arrow;
 
 			drag = false;
@@ -128,7 +132,7 @@ namespace SharpEngine
 			if (drag)
 			{
 				dx = pos.X - sx;
-				dy = pos.Y + 23 - sy;
+				dy = pos.Y - sy;
 
 				Renderer.MouseMove = new Point(dx, dy);
 				SetCursorPos((int)sx, (int)sy);
@@ -138,15 +142,15 @@ namespace SharpEngine
 				}
 				if (e.RightButton == MouseButtonState.Pressed)
 				{
-					Renderer.CurrentState.Camera.CameraOrbit((float)dx/500);
-					Renderer.CurrentState.Camera.CameraIncline((float)dy / 500);
+					//Renderer.CurrentState.Camera.Orbit((float)dx/500);
+					//Renderer.CurrentState.Camera.Incline((float)dy / 500);
 				}
 			}
 		}
 
 		private void UserControl_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
 		{
-			Renderer.CurrentState.Camera.CameraZoom(e.Delta/1000.0f);
+			//Renderer.CurrentState.Camera.CameraZoom(e.Delta/1000.0f);
 		}
 
 		private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)

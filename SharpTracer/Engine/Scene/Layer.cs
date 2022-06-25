@@ -1,18 +1,16 @@
-﻿using SharpEngine.Engine.Graphics;
-using GlmSharp;
+﻿using GlmSharp;
 using SharpGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SharpTracer.Engine.Scene;
 
-namespace SharpEngine.Engine
+namespace SharpTracer.Engine
 {
-	public class Layer
+    public class Layer
 	{
-		private List<Entity> _entities;
-
 		public List<Entity> Entities
 		{
 			get
@@ -63,5 +61,9 @@ namespace SharpEngine.Engine
 		{
 			Entities.Clear();
 		}
-	}
+
+        #region Private
+        private List<Entity> _entities;
+        #endregion
+    }
 }

@@ -4,37 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace SharpEngine.Maths
+namespace SharpTracer.Maths
 {
     /// <summary>
-    /// The pose class combines Translation, Orientation and Timestamp to gove a complete 4D position
+    /// The pose class combines Translation, Orientation and Scale to give a complete 3D position
     /// </summary>
     public class Transform
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public vec3 Translation
-        { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        { get { return _translation; } set { _translation = value; } }
+
         public quat Orientation
-        { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
+        { get { return _orientation; } set { _orientation = value; } }
+
         public vec3 Scale
-        { get; set; }
+        { get { return _scale; } set { _scale = value; } }
 
         public float this[int r, int c]
         {
             get { return _transform[r, c]; }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public Transform()
         {
             _translation = new vec3();

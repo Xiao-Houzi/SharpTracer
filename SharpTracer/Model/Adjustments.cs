@@ -1,5 +1,5 @@
 ﻿using GlmSharp;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Model.Events;
 using SharpTracer.Base;
 
 namespace SharpTracer

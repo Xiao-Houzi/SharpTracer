@@ -1,12 +1,13 @@
 ﻿using SharpEngine.Engine.Graphics;
 using SharpTracer.Base;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Engine.Scene;
+using SharpTracer.Model.Events;
 using System;
 using System.Collections.Generic;
 
 namespace SharpTracer.View.Controls
 {
-	public class GeometryList : NotificationBase, ITabPage
+    public class GeometryList : NotificationBase, ITabPage
 	{
 
 		public string Title => _title;
@@ -80,7 +81,7 @@ namespace SharpTracer.View.Controls
 			switch(args.Reason)
 			{
 				case SharpTracerModelArgs.EventReason.EntitysUpdated:
-					NotifyPropertyChanged(nameof(Geometry));
+					NotifyPropertyChanged(nameof(GLMesh));
 					break;
 			}
 		}

@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Base/Themes/AelfcraeftTheme.xaml"/>
+                <ResourceDictionary Source="/View/Themes/AelfcraeftTheme.xaml"/>
                 <ResourceDictionary >
                     <!-- Templated Views For ViewModels -->
 

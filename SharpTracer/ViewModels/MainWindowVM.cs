@@ -1,15 +1,17 @@
 ﻿using SharpEngine.Engine.Graphics;
 using SharpTracer.View.Controls;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Model.Events;
 using GlmSharp;
 using SharpGL;
 using System.Collections.ObjectModel;
 using SharpTracer.Base;
-using SharpTracer.RendererScripting;
+using SharpTracer.Scripting;
+using SharpTracer.Engine.Scene;
+using SharpTracer.Engine.Graphics;
 
 namespace SharpTracer.ViewModels
 {
-	public class MainWindowVM : NotificationBase
+    public class MainWindowVM : NotificationBase
 	{
 		public SharpTracerModel Model;
 		private ExpandablePanelVM expandablePanel;

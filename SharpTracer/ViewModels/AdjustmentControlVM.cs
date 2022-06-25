@@ -1,7 +1,7 @@
 ﻿using SharpEngine.Maths;
 using SharpTracer;
 using GlmSharp;
-using SharpTracer.Model.Infrastructure;
+using SharpTracer.Model.Events;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;

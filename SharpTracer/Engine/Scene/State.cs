@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using SharpGL;
-using SharpEngine.Engine.Graphics;
 using GlmSharp;
+using SharpTracer.Engine.Scene;
 
-namespace SharpEngine.Engine
+namespace SharpTracer.Engine
 {
-	public class State
+    public class State
 	{
 		public Dictionary<string, Layer> Layers;
 		public Colour BackColour;
-		private string _camLayer;
+
+
 
 		public Camera Camera
 		{
@@ -30,26 +31,26 @@ namespace SharpEngine.Engine
 			set;
 		}
 
+        public int CanvasWidth { get => _canvasWidth; set => _canvasWidth = value; }
+
+        public int CanvasHeight { get => _canvasHeight; set => _canvasHeight = value; }
+
 		public State()
 		{
 			BackColour = new Colour() { R = 0, G = 0, B = 0, A = 0 };
 			Layers = new Dictionary<string, Layer>();
 			Layers.Add("Background", new Layer(true));
+			Layers.Add("Model", new Layer());
 			Layers.Add("Foreground", new Layer());
 			Layers["Foreground"].IsFlat = true;
 		}
 
 		public void Clear()
 		{
-			foreach(KeyValuePair<string, Layer> L in Layers)
+			foreach(Layer layer in Layers.Values)
 			{
-				L.Value.Clear();
+				layer.Clear();
 			}
-		}
-
-		public vec3 SetCameraPose(object p)
-		{
-			throw new NotImplementedException();
 		}
 
 		public void SetCameraLayer(string layer)
@@ -103,5 +104,9 @@ namespace SharpEngine.Engine
 					entity.Render(layer, this);
 				}
 		}
+
+        private string _camLayer;
+		private int _canvasWidth;
+		private int _canvasHeight;
 	}
 }

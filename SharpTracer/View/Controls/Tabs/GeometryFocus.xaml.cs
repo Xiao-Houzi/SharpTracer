@@ -1,4 +1,4 @@
-﻿using SharpEngine.Engine.Graphics;
+﻿using SharpTracer.Engine.Scene;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +15,10 @@ using System.Windows.Shapes;
 
 namespace SharpTracer.View.Controls
 {
-	/// <summary>
-	/// Interaction logic for EntityView.xaml
-	/// </summary>
-	public partial class GeometryFocus : UserControl
+    /// <summary>
+    /// Interaction logic for EntityView.xaml
+    /// </summary>
+    public partial class GeometryFocus : UserControl
 	{
 		public GeometryFocus()
 		{

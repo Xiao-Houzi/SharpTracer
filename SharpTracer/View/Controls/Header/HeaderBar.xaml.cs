@@ -10,9 +10,9 @@ namespace SharpTracer.View.Controls
 	public partial class HeaderBar : UserControl, INotifyPropertyChanged
 	{
 		#region NotifyPropertyChanged
-		public event PropertyChangedEventHandler PropertyChanged;
+		public event PropertyChangedEventHandler? PropertyChanged;
 
-		protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
+		protected virtual void NotifyPropertyChanged([CallerMemberName] string? propertyName = null)
 		{
 			Application.Current?.Dispatcher?.Invoke(
 			   () =>
