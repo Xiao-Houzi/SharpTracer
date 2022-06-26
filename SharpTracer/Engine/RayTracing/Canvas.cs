@@ -3,6 +3,7 @@ using SharpEngine.Maths;
 using SharpTracer.Engine.Maths;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine.Scene.RenderGeometry;
+using SharpTracer.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,11 @@ namespace SharpTracer.Engine.RayTracing
             _samples = 500;
         }
 
-        void Initialise(State state)
+        void Initialise(Project project)
         {
-            _state = state;
-            _width = state.CanvasWidth;
-            _height = state.CanvasHeight;
+            _project = project;
+            _width = _project.FrameWidth;
+            _height = _project.FrameHeight;
             _pixels = new vec4[_width * _height];
             _collected = new vec4[_width * _height];
             for (int i = 0; i < _height; i++)
@@ -34,7 +35,7 @@ namespace SharpTracer.Engine.RayTracing
             _data = new char[_width * _height * 3];
         }
 
-        void Run()
+        void Render()
         {
             Task.Run(() =>
             {
@@ -62,7 +63,7 @@ namespace SharpTracer.Engine.RayTracing
 
         internal vec4 GetColour(float u, float v)
         {
-            return Colour(_state.Camera.GetRay(u, v));
+            return Colour(_project.SceneCamera.GetRay(u, v));
         }
 
         vec4 Colour(Ray ray, int bounce = 0)
@@ -71,7 +72,7 @@ namespace SharpTracer.Engine.RayTracing
 
             bool isHit = false;
             float max = 1000.0f;
-            foreach (Entity entity in _state.Layers[""].Entities)
+            foreach (Entity entity in _project.Entities)
             {
                 if (entity.Geometry.Test(ray, entity.Transform, entity.Material, 0.001f, max, ref hit))
                 {
@@ -123,7 +124,6 @@ namespace SharpTracer.Engine.RayTracing
             return _data;
         }
 
-        private State _state;
 
         #region Private
         int _width, _height;
@@ -132,6 +132,7 @@ namespace SharpTracer.Engine.RayTracing
         private int _samples;
         private bool _showframe;
         private bool _rendering;
+        private Project _project;
         #endregion
     }
 }

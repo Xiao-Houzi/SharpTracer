@@ -33,9 +33,8 @@ namespace SharpTracer
 				//log.Path = "D:/";
 				log.Initialise(new Uri(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"D:\", "DiagnosticLog.txt")));
 
-				SharpTracerModel modelController = new SharpTracerModel(logName);
-
-				MainWindowVM mainVM = new MainWindowVM(modelController);
+				SharpTracerModel model = new SharpTracerModel();
+				MainWindowVM mainVM = new MainWindowVM(model);
 				MainWindow window = new MainWindow() { DataContext = mainVM };
 
 				window.Show();

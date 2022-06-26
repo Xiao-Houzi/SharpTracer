@@ -2,7 +2,7 @@
 using System;
 using SharpTracer.Engine.Scene;
 
-namespace SharpTracer.Scripting.Scripts
+namespace SharpTracer.Scripts
 {
     public class GizmoScript : IScript
 	{

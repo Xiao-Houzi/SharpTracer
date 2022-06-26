@@ -1,9 +1,8 @@
-﻿using SharpEngine.Maths;
-using System.Collections.Generic;
-using SharpTracer.Engine;
+﻿using System.Collections.Generic;
 using SharpTracer.Engine.Graphics;
 using SharpTracer.Engine.Scene.RenderGeometry;
 using SharpTracer.Maths;
+using SharpTracer.Model;
 
 namespace SharpTracer.Engine.Scene
 {
@@ -85,9 +84,9 @@ namespace SharpTracer.Engine.Scene
             _script?.Run(delta);
         }
 
-        public void Render(Layer layer, State state)
+        public void Render(ProjectRenderer state)
         {
-            GLLayer.Render(state, layer, this);
+            GLLayer.Render(state, this);
         }
 
         private string _name;

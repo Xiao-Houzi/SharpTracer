@@ -11,13 +11,6 @@ namespace SharpTracer
 {
 	public class CameraControlVM : NotificationBase
 	{
-		private string _axis;
-
-		public MainWindowVM VM
-		{
-			get;
-		}
-
 		public String Axis
 		{
 			get { return _axis; }
@@ -28,11 +21,11 @@ namespace SharpTracer
 		{
 			get
 			{
-				return VM.Model.Renderer.CurrentState.Camera.Zoom;
+				return _model.Renderer.ViewCamera.Zoom;
 			}
 			set
 			{
-				VM.Model.Renderer.CurrentState.Camera.Zoom = value;
+				_model.Renderer.ViewCamera.Zoom = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -41,88 +34,11 @@ namespace SharpTracer
 		{
 			get
 			{
-				return VM.Model.Renderer.CurrentState.Camera.FOV;
+				return _model.Renderer.ViewCamera.FOV;
 			}
 			set
 			{
-				VM.Model.Renderer.CurrentState.Camera.FOV = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public float Pointsize
-		{
-			get
-			{
-				return VM.Pointsize;
-			}
-			set
-			{
-				VM.Pointsize= value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public float Confidence
-		{
-			get
-			{
-				return VM.Confidence;
-			}
-			set
-			{
-				VM.Confidence = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public int Near
-		{
-			get
-			{
-				return VM.Near;
-			}
-			set
-			{
-				VM.Near = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public int Far
-		{
-			get
-			{
-				return VM.Far;
-			}
-			set
-			{
-				VM.Far = value;
-				NotifyPropertyChanged();
-			}
-		}
-
-		public float Speed
-		{
-			get
-			{
-				return SharpTracerModel.Speed;
-			}
-			set
-			{
-				SharpTracerModel.Speed = value;
-			}
-		}
-
-		public float Time
-		{
-			get
-			{
-				return VM.Model.Renderer.CurrentState.Time;
-			}
-			set
-			{
-				VM.Model.Renderer.CurrentState.Time = value;
+				_model.Renderer.ViewCamera.FOV = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -145,21 +61,13 @@ namespace SharpTracer
 		{get;set;
 		}
 
-		public CameraControlVM(MainWindowVM VM)
+		public CameraControlVM(SharpTracerModel model)
 		{
-			this.VM = VM;
-			Axis = "X";
-			ShowGizmos = new Command(() => true, (x) => VM.IsolateGizmos = !VM.IsolateGizmos, "ShowGizmos");
-			ShowSingle = new Command(() => true, (x) => VM.SingleEntity = !VM.SingleEntity, "ShowSingle");
-			GeometryFreq = new Command(() => true, (x) => VM.Model.GeometryFreq = Convert.ToInt32(x), "GeometryFreq");
-			ResetView = new Command(() => true, (x) => VM.Model.ResetView(), "ResetView");
+			_model = model;
+			ResetView = new Command(() => true, (x) => _model.Project.ResetViewCamera(), "ResetView");
 		}
 
-		public void Update()
-		{
-			NotifyPropertyChanged(nameof(Zoom));
-			NotifyPropertyChanged(nameof(FOV));
-			NotifyPropertyChanged(nameof(Time));
-		}
+		private SharpTracerModel _model;
+		private string _axis;
 	}
 }

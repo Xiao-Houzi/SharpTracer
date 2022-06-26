@@ -6,6 +6,7 @@ using System.Threading;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine.Scene.RenderGeometry;
 using SharpEngine.Engine;
+using SharpTracer.Model;
 
 namespace SharpTracer.Engine.Graphics
 {
@@ -57,7 +58,7 @@ namespace SharpTracer.Engine.Graphics
 			_aspect = AspectRatio();
 		}
 
-		public static void BeginFrame(State state)
+		public static void BeginFrame(ProjectRenderer state)
 		{
 			if(GL is null) return;
 			renderGuard.WaitOne();
@@ -65,7 +66,7 @@ namespace SharpTracer.Engine.Graphics
 			GL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 		}
 
-		public static void Render(State state, Layer layer, Entity entity)
+		public static void Render(ProjectRenderer renderer, Entity entity)
 		{
 			// Render a Graphic object
 			Geometry geometry = entity.Geometry;
@@ -75,14 +76,14 @@ namespace SharpTracer.Engine.Graphics
 
 			// get the matrices for the scene
 			float[] projmat;
-			if(layer.IsFlat)
+			if(renderer.Orthographic)
 			{
 				projmat = mat4.Identity.ToArray();
 				projmat[0] = AspectRatio();
 			}
 			else
-				projmat = ProjectionMatrix(AspectRatio(), layer.Camera).ToArray();
-			float[] viewmat = layer.Camera.Matrix.ToArray();
+				projmat = ProjectionMatrix(AspectRatio(), renderer.ViewCamera).ToArray();
+			float[] viewmat = renderer.ViewCamera.Matrix.ToArray();
 			float[] modlmat = ModelMatrix(entity, geometry).ToArray();
 			float[] data = new float[16];
 		

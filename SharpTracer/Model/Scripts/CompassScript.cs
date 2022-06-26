@@ -1,24 +1,25 @@
 ﻿using GlmSharp;
 using SharpTracer.Engine.Scene;
 
-namespace SharpTracer.Scripting
+namespace SharpTracer.Scripts
 {
     internal class CompassScript : IScript
 	{
-		Entity entity;
 		public void Initialise(Entity entity)
 		{
-			this.entity = entity;
+			_entity = entity;
 		}
 
 		public void Run(float delta)
 		{
-			entity.Transform.Translate(new vec3( -1 *delta , 0, 0));
+			_entity.Transform.Translate(new vec3( -1 *delta , 0, 0));
 		}
 
 		public void Destroy()
 		{
 			
 		}
+
+		private Entity _entity;
 	}
 }

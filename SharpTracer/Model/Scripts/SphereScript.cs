@@ -1,9 +1,9 @@
 ﻿using GlmSharp;
 using SharpTracer.Engine.Scene;
 
-namespace SharpTracer.Scripting
+namespace SharpTracer.Scripts
 {
-    class CubeScript : IScript
+    class SphereScript : IScript
 	{
 		// Add yor script vars for persistence
 		Entity Entity;

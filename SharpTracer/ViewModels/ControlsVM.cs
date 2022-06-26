@@ -10,10 +10,6 @@ namespace SharpTracer
 {
 	public class ControlsVM : NotificationBase
 	{
-		private AdjustmentControlVM adjustmentControls;
-		private CameraControlVM cloudPanel;
-		private Command _showGizmos;
-
 		public Command ShowGizmos
 		{
 			get
@@ -23,19 +19,6 @@ namespace SharpTracer
 			set
 			{
 				_showGizmos = value; ; NotifyPropertyChanged();
-			}
-		}
-
-		public AdjustmentControlVM AdjustmentControls
-		{
-			get
-			{
-				return adjustmentControls;
-			}
-			set
-			{
-				adjustmentControls = value;
-				NotifyPropertyChanged();
 			}
 		}
 
@@ -59,12 +42,11 @@ namespace SharpTracer
 		}
 
 
-		public ControlsVM(MainWindowVM vm)
+		public ControlsVM(SharpTracerModel model)
 		{
-			VM = vm;
+			_model = model;
 
-			adjustmentControls = new AdjustmentControlVM(vm.Adjustments);
-			cloudPanel = new CameraControlVM(vm);
+			cloudPanel = new CameraControlVM(model);
 
 			_showGizmos = new Command(CanShowGizmos, ExecuteShowGizmos);
 		}
@@ -73,12 +55,16 @@ namespace SharpTracer
 
 		private void ExecuteShowGizmos(object Parameter)
 		{
-			VM.IsolateGizmos = !VM.IsolateGizmos;
+			VM.ShowGizmos = !VM.ShowGizmos;
 		}
 
 		private bool CanShowGizmos()
 		{
 			return true;
 		}
+
+		private CameraControlVM cloudPanel;
+		private Command _showGizmos;
+		private SharpTracerModel _model;
 	}
 }

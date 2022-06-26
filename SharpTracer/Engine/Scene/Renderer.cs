@@ -3,32 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using SharpEngine.Engine.Graphics;
 using SharpGL;
-using SharpTracer.Engine;
 using SharpTracer.Engine.Graphics;
+using SharpTracer.Model;
 
-namespace SharpEngine.Engine
+namespace SharpTracer.Engine
 {
-	public class Renderer
+    public class Renderer
 	{
-		const float ticksize  = 1/(float)TimeSpan.TicksPerSecond;
-		private double time;
-		protected StateMachine _stateMachine;
-		protected float _delta;
-
 		public Dictionary<string, Tuple<string, string>> shaders
 		{
 			get;set;
 		}
 
-		public State CurrentState
-		{
-			get
-			{
-				return _stateMachine.CurrentState;
-			}
-		}
 		public float Delta
 		{
 			get
@@ -37,22 +24,24 @@ namespace SharpEngine.Engine
 			}
 		}
 
-		private List<float> ft;
-		public float FPS
+        public float FPS
 		{
 			get; set;
 		}
 
-		public Renderer()
+		public Renderer(ProjectRenderer projectRenderer)
 		{
 			shaders = new Dictionary<string, Tuple<string, string>>();
-			ft = new List<float>();
-			_stateMachine = new StateMachine();
+			LoadShader("Default");
+			LoadShader("Texture");
+			LoadShader("Hex");
 
+			_frameTimes = new List<float>();
+			_projectRenderer = projectRenderer;
 			_delta = 0;
 		}
 
-		public Point MouseMove
+		public Point MousePosition
 		{
 			get;
 			internal set;
@@ -61,14 +50,9 @@ namespace SharpEngine.Engine
 		public virtual void Initialise(OpenGL gl)
 		{
 			GLLayer.Initialise(this, gl);
-			InitialiseStatemachine();
-		}
-
-		public void InitialiseStatemachine()
-		{
 			Application.Current.Dispatcher.Invoke(
-				()=>
-				_stateMachine.Initialise(GLLayer.GL)
+				() =>
+				_projectRenderer.Initialise()
 				);
 		}
 
@@ -83,21 +67,21 @@ namespace SharpEngine.Engine
 		{
 			GetDelta();
 
-			_stateMachine.Update(_delta);
+			_projectRenderer.Update(_delta);
 			RendererUpdate();
 		}
 
 		public void Render(OpenGL gl)
 		{
-			GLLayer.BeginFrame(_stateMachine.CurrentState);
-			_stateMachine.Render(gl);
+			GLLayer.BeginFrame(_projectRenderer);
+			_projectRenderer.Render(gl);
 			GLLayer.EndFrame();
 		}
 
 		
 		public void Cleanup()
 		{
-			_stateMachine.Cleanup();
+			_projectRenderer.Cleanup();
 		}
 
 		private void GetDelta()
@@ -106,35 +90,28 @@ namespace SharpEngine.Engine
 
 			_delta = (float)(currentTime - time);
 
-			ft.Add(_delta);
+			_frameTimes.Add(_delta);
 			if(time == 0) _delta = 0;
 			if(_delta > .1f) _delta = .1f;
 
-			if(ft.Count > 30) ft.RemoveAt(0);
-			FPS = 1/ft.Average();
+			if(_frameTimes.Count > 30) _frameTimes.RemoveAt(0);
+			FPS = 1/_frameTimes.Average();
 
 			time = currentTime;
 		}
 
-		public void AddState(State state)
-		{
-			_stateMachine.States.Remove(state.GetType());
-			_stateMachine.States.Add(state.GetType(), state);
-		}
 
-		public void SetCurrentState(Type state)
-		{
-			_stateMachine.CurrentState = _stateMachine.States[state];
-		}
+
 
 		public void InitialiseState(Type state)
 		{
-			_stateMachine.States[state].InitialiseState();
+			_projectRenderer.Initialise();
 		}
 
 		public void SetSize(int width, int height)
 		{
 			GLLayer.UpdateWindowSize(width, height);
+			_projectRenderer.SetSize(width, height);
 		}
 
 		public void LoadShader(string v)
@@ -145,5 +122,38 @@ namespace SharpEngine.Engine
 			string fs = sr.ReadToEnd();
 			shaders.Add(v, new System.Tuple<string, string>(vs, fs));
 		}
+        internal void MouseEnter()
+        {
+			_projectRenderer.MouseEnter();
+        }
+        internal void MouseLeave()
+        {
+			_projectRenderer.MouseLeave();
+		}
+        internal void MouseUp(Point point)
+        {
+			_projectRenderer.MouseEnter(point);
+		}
+        internal void MouseDown(Point point)
+        {
+			_projectRenderer.MouseEnter(point);
+		}
+        internal void Scroll(int delta)
+        {
+			_projectRenderer.MouseScroll(delta);
+		}
+		internal void MouseMove(Point position)
+        {
+			Point delta = (Point)(position - _lastPosition);
+			_projectRenderer.MouseMove(position, delta);
+			_lastPosition = position;
+		}
+
+		private const float ticksize = 1 / (float)TimeSpan.TicksPerSecond;
+		private double time;
+		protected ProjectRenderer _projectRenderer;
+		protected float _delta;
+		private List<float> _frameTimes;
+		private Point _lastPosition;
 	}
 }

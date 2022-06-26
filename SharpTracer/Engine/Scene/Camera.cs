@@ -119,7 +119,7 @@ namespace SharpTracer.Engine
 
      
 
-        void Aspect(int width, int height)
+        public void Aspect(int width, int height)
         {
             _aspect = width/height;
         }
