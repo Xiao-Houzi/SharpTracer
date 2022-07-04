@@ -7,7 +7,7 @@ using System.ComponentModel;
 using SharpTracer.Base;
 using SharpTracer.View.Controls;
 
-namespace SharpTracer
+namespace SharpTracer.ViewModels
 {
     public class ControlsVM : NotificationBase, ITabPage
     {

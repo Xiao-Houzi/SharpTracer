@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpTracer
+namespace SharpTracer.ViewModels
 {
 	public class CameraControlVM : NotificationBase
 	{

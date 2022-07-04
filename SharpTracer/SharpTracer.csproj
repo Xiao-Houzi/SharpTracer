@@ -81,6 +81,9 @@
     <Page Update="View\Controls\SearchBar.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
+    <Page Update="View\Controls\Tabs\ControlsView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
   </ItemGroup>
 
   <ItemGroup>

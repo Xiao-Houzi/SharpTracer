@@ -21,6 +21,11 @@
                         <controls:EntityView/>
                     </DataTemplate>
 
+                    <DataTemplate DataType="{x:Type viewModels:ControlsVM}">
+                        <controls:ControlsView/>
+                    </DataTemplate>
+
+
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
