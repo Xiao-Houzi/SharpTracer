@@ -37,6 +37,7 @@ namespace SharpTracer
         { get; set; }
         public bool Isolate
         { get; internal set; }
+        public bool ShowTools { get; set; }
         public static Dictionary<string, bool> Keys
         {
             get;

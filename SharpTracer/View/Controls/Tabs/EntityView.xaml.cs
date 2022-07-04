@@ -18,9 +18,9 @@ namespace SharpTracer.View.Controls
     /// <summary>
     /// Interaction logic for EntityView.xaml
     /// </summary>
-    public partial class GeometryFocus : UserControl
+    public partial class EntityView : UserControl
 	{
-		public GeometryFocus()
+		public EntityView()
 		{
 			InitializeComponent();
 		}

@@ -67,17 +67,6 @@ namespace SharpTracer.ViewModels
                 _status = value; NotifyPropertyChanged();
             }
         }
-
-        public ObservableCollection<Entity> Entitys
-        {
-            get; set;
-        }
-        public Command CommandCloseApp
-        {
-            get;
-            private set;
-        }
-
         public Entity SelectedEntity
         {
             get
@@ -90,6 +79,17 @@ namespace SharpTracer.ViewModels
                 NotifyPropertyChanged();
             }
         }
+
+        public ObservableCollection<Entity> Entitys
+        {
+            get; set;
+        }
+        public Command CommandCloseApp
+        {
+            get;
+            private set;
+        }
+
 
         public float Pointsize
         {
@@ -117,18 +117,20 @@ namespace SharpTracer.ViewModels
             _model = model;
             _renderer = new Renderer();
             _model.Renderer = _renderer;
+            ExpandablePanel = new ExpandablePanelVM(340);
+
             Controls = new ControlsVM(model);
             Status = new StatusVM(model);
             Entitys = new ObservableCollection<Entity>();
 
-            ExpandablePanel = new ExpandablePanelVM(340);
+            ExpandablePanel.Tabs.Add(new ControlsVM(model));
+            ExpandablePanel.Tabs.Add(new GeometryList(model));
+            ExpandablePanel.Tabs.Add(new EntityVM());
+
 
             CommandCloseApp = new Command(() => true,
-                (x) =>
-                {
-                    AppCloseRequested = true;
-                    SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandCloseApp, "CloseApp");
-                });
+                (x) => { AppCloseRequested = true; SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandCloseApp, "CloseApp"); });
+            
 
             Command CommandClear = new Command(() => true,
                 (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandClear, ""); }, "Clear");

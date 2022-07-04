@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignWidth="86" d:DesignHeight="100">
+             d:DesignWidth="86" d:DesignHeight="40">
     <Viewbox Name="VB" Stretch="UniformToFill">
-        <Canvas Name="LogoCanvas" Width="86" Height="100">
+        <Canvas Name="LogoCanvas" Width="86" Height="40">
             <Canvas.Resources>
                 <Style TargetType="Path">
                     <Setter Property="Stroke" Value="#FFCC44"/>
@@ -15,7 +15,7 @@
                     <Setter Property="Fill" Value="#113344"/>
                 </Style>
             </Canvas.Resources>
-            <Rectangle StrokeThickness="3" Width="86" Height="100" Stroke="#FFCC44"/>
+            <Rectangle StrokeThickness="3" Width="86" Height="40" Stroke="#FFCC44"/>
             <Canvas Name="Text" RenderTransformOrigin="0,1">
                 
               

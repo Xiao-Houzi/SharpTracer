@@ -83,4 +83,8 @@
     </Page>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="View\Controls\ThreeD\" />
+  </ItemGroup>
+
 </Project>

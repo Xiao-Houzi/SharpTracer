@@ -13,7 +13,7 @@
 	</UserControl.Resources>
 	<DockPanel>
 		<Label Content="{Binding Title}"  DockPanel.Dock="Top"/>
-		<local:GeometryFocus DataContext="{Binding SelectedEntity}" DockPanel.Dock="Top"/>
+		<local:EntityView DataContext="{Binding SelectedEntity}" DockPanel.Dock="Top"/>
 		<DataGrid ItemsSource="{Binding Entitys}" SelectedItem="{Binding SelectedEntity}" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserSortColumns="False"
 				   CanUserResizeColumns="False" CanUserResizeRows="False" CanUserAddRows="False" SelectionMode="Single">
 			<DataGrid.Columns>

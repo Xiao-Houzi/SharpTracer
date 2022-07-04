@@ -14,11 +14,9 @@
 	WindowState="Maximized" d:DesignWidth="1440" d:DesignHeight="900" Closing="Window_Closing" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
 	<Grid>
 		<DockPanel>
-			<controls:HeaderBar DockPanel.Dock="Top"		DataContext="{Binding Header}"/>
-			
-			<local:StatusPanel DockPanel.Dock="Bottom" DataContext="{Binding Status}"/>
-			<controls:GeometryViewControls DockPanel.Dock="Left"		DataContext="{Binding Controls}"/>
-			<controls:ExpandablePanel DockPanel.Dock="Right"  	DataContext="{Binding ExpandablePanel}" />
+            <controls:HeaderBar DockPanel.Dock="Top"		DataContext="{Binding Header}"/>
+            <local:StatusPanel DockPanel.Dock="Bottom" DataContext="{Binding Status}"/>
+            <controls:ExpandablePanel DockPanel.Dock="Left"  	DataContext="{Binding ExpandablePanel}" />
 			<engine:GL3DView DockPanel.Dock="Left" Renderer="{Binding Renderer}"/>
 		</DockPanel>
 	</Grid>
