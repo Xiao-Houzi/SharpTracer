@@ -29,8 +29,6 @@ namespace SharpTracer
         public OpenGL GL
         { get; internal set; }
         private Task GLAcquiredDelegate;
-        public ProjectRenderer Renderer
-        { get => _renderer; internal set => _renderer = value; }
         public static Entity? SelectedEntity
         { get; set; }
         public static float EntityPointsize
@@ -48,7 +46,6 @@ namespace SharpTracer
         public SharpTracerModel()
         {
             _project = new Project();
-            _renderer = new ProjectRenderer(_project);
             Keys = new Dictionary<string, bool>()
             {
                 {"Forward", false },
@@ -174,7 +171,6 @@ namespace SharpTracer
         private GeometryViewControls _cloudViewControls;
         private Uri path;
         private System.Threading.Mutex loadMutex = new System.Threading.Mutex();
-        private ProjectRenderer _renderer;
         #endregion
     }
 }

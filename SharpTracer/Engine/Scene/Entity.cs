@@ -84,11 +84,6 @@ namespace SharpTracer.Engine.Scene
             _script?.Run(delta);
         }
 
-        public void Render(ProjectRenderer state)
-        {
-            GLLayer.Render(state, this);
-        }
-
         private string _name;
         protected GLMesh _geometry;
         protected Geometry _mesh;

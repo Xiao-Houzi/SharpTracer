@@ -106,12 +106,12 @@ namespace SharpEngine
 
         private void UserControl_MouseEnter(object sender, MouseEventArgs e)
         {
-            Renderer?.MouseEnter();
+            Renderer?.MouseEnter(Mouse.GetPosition(null));
         }
 
         private void UserControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            Renderer?.MouseLeave();
+            Renderer?.MouseLeave(Mouse.GetPosition(null));
         }
 
         private void UserControl_MouseMove(object sender, MouseEventArgs e)

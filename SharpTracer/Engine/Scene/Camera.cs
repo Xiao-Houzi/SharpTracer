@@ -12,8 +12,7 @@ namespace SharpTracer.Engine
         {
             get
             {
-
-                mat4 view = mat4.LookAt(_lookAt, Position, _up);
+                mat4 view = mat4.LookAt(Position, _lookAt,  _up);
                 return view;
             }
         }
@@ -63,7 +62,7 @@ namespace SharpTracer.Engine
         public vec3 Position
         {
             get => _position;
-
+            set => _position = value;
         }
         public vec3 Target
         {
@@ -83,10 +82,9 @@ namespace SharpTracer.Engine
             set => _lensRadius = value;
         }
 
-        public float view;
-
         public Camera()
         {
+            _vfov = 1.57f;
             _aspect = 1.0f;
             Reset();
             Initialise();
@@ -158,7 +156,7 @@ namespace SharpTracer.Engine
 
         public void Reset()
         {
-            _position = new vec3(0, 0, 1);
+            _position = new vec3(0, 0, 5);
             _lookAt = new vec3(0, 0, 0);
             _up = new vec3(0, 1, 0);
             _roll = 0;

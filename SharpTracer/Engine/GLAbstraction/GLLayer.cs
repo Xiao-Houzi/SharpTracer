@@ -58,15 +58,17 @@ namespace SharpTracer.Engine.Graphics
 			_aspect = AspectRatio();
 		}
 
-		public static void BeginFrame(ProjectRenderer state)
+		public static void BeginFrame(Renderer state)
 		{
 			if(GL is null) return;
 			renderGuard.WaitOne();
-			GL.ClearColor(state.BackColour.R, state.BackColour.G, state.BackColour.B, state.BackColour.A);
+			GL.ClearColor(0.025f, 0.05f, 0.10f,1);
 			GL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
+
+			//draw background
 		}
 
-		public static void Render(ProjectRenderer renderer, Entity entity)
+		public static void Render(Renderer renderer, Camera camera, Entity entity)
 		{
 			// Render a Graphic object
 			Geometry geometry = entity.Geometry;
@@ -82,8 +84,8 @@ namespace SharpTracer.Engine.Graphics
 				projmat[0] = AspectRatio();
 			}
 			else
-				projmat = ProjectionMatrix(AspectRatio(), renderer.ViewCamera).ToArray();
-			float[] viewmat = renderer.ViewCamera.Matrix.ToArray();
+				projmat = ProjectionMatrix(AspectRatio(), camera).ToArray();
+			float[] viewmat = camera.Matrix.ToArray();
 			float[] modlmat = ModelMatrix(entity, geometry).ToArray();
 			float[] data = new float[16];
 		
@@ -124,6 +126,8 @@ namespace SharpTracer.Engine.Graphics
 
 		public static void EndFrame()
 		{
+			//draw instruments
+
 			renderGuard.ReleaseMutex();
 		}
 
@@ -165,7 +169,7 @@ namespace SharpTracer.Engine.Graphics
 
 			float AR = AspectRatio();
 			float Rng = nrclip - farclip;
-			float tanHalfFOV = (float)Math.Tan(camera.view / 2.0f);
+			float tanHalfFOV = (float)Math.Tan(camera.FOV / 2.0f);
 
 			float[] cells = {	1/(tanHalfFOV) * AR,	0.0f,						0.0f,									0.0f,
 									0.0f,								1/tanHalfFOV,		0.0f,									0.0f,
@@ -181,12 +185,12 @@ namespace SharpTracer.Engine.Graphics
 			return matrix;
 		}
 
-		public static float AspectRatio()
+		#region Private
+		private static float AspectRatio()
 		{
 			return (float)_height / (float)_width;
 		}
-
-		static void CheckGL_Error()
+		private static void CheckGL_Error()
 		{
 			uint err = GL.GetError();
 			string error = "";
@@ -205,5 +209,10 @@ namespace SharpTracer.Engine.Graphics
 			Console.Error.WriteLine(error);
 		}
 
+
+		Entity _background = new Entity("Background", new Geometry(new MeshPlane()), new Material());
+		Entity _gizmo = new Entity("Compass", new Geometry(new Gizmo()), new Material());
+		Entity _centroid = new Entity("Centroid", new Geometry(new Gizmo()), new Material(), null);
+		#endregion
 	}
 }
