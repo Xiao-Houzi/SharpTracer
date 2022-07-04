@@ -1,4 +1,4 @@
-﻿namespace SharpTracer.Engine.Graphics
+﻿namespace SharpTracer.Engine.GLAbstraction
 {
 	public class ShaderData
 	{

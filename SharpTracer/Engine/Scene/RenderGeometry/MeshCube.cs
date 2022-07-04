@@ -1,4 +1,5 @@
 ﻿using SharpGL;
+using SharpTracer.Engine.GLAbstraction;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,28 +7,24 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.Scene.RenderGeometry
 {
-	public class MeshSphere : GLMesh
+	public class MeshCube : Geometry
 	{
-		public MeshSphere() : base("Sphere")
-		{
-		}
-
-		public override void InitialiseGeometry()
+		public MeshCube() : base("Cube")
 		{
 			OpenGL gl = GLLayer.GL;
 			// initialise geometry
 			float[] vertexPositions =
 				 {// X			Y			Z			R			G			B			A			U			V			Nx		Ny		nZ	
-					-0.5f,		-0.5f,		+0.5f,	0.0f,		0.0f,		1.0f,		0.5f,		0,			0,
-					+0.5f,	-0.5f,		+0.5f,	1.0f,      0.0f,		1.0f,		0.5f,		1,          0,
-					+0.5f,	+0.5f,	+0.5f,	0.0f,      1.0f,		1.0f,		0.5f,		1,          1,
-					-0.5f,		+0.5f,	+0.5f,	1.0f,		1.0f,		1.0f,		0.5f,		0,          1,
-					-0.5f,		-0.5f,		-0.5f,		0.0f,		0.0f,		0.0f,		0.5f,		1,          0,
-					+0.5f,	-0.5f,		-0.5f,		1.0f,      0.0f,		0.0f,		0.5f,		0,          0,
-					+0.5f,	+0.5f,	-0.5f,		0.0f,      1.0f,		0.0f,		0.5f,		0,          1,
-					-0.5f,		+0.5f,	-0.5f,		1.0f,		1.0f,		0.0f,		0.5f,		1,          1,
+					-0.5f,      -0.5f,      +0.5f,  0.0f,       0.0f,       1.0f,       0.5f,       0,          0,
+					+0.5f,  -0.5f,      +0.5f,  1.0f,      0.0f,        1.0f,       0.5f,       1,          0,
+					+0.5f,  +0.5f,  +0.5f,  0.0f,      1.0f,        1.0f,       0.5f,       1,          1,
+					-0.5f,      +0.5f,  +0.5f,  1.0f,       1.0f,       1.0f,       0.5f,       0,          1,
+					-0.5f,      -0.5f,      -0.5f,      0.0f,       0.0f,       0.0f,       0.5f,       1,          0,
+					+0.5f,  -0.5f,      -0.5f,      1.0f,      0.0f,        0.0f,       0.5f,       0,          0,
+					+0.5f,  +0.5f,  -0.5f,      0.0f,      1.0f,        0.0f,       0.5f,       0,          1,
+					-0.5f,      +0.5f,  -0.5f,      1.0f,       1.0f,       0.0f,       0.5f,       1,          1,
 			   };
 			uint[] tempTris =
 				  {
@@ -64,5 +61,6 @@ namespace SharpTracer.Engine.Graphics
 			gl.VertexAttribPointer(1, 4, OpenGL.GL_FLOAT, false, 36, new IntPtr(12));
 			gl.VertexAttribPointer(2, 2, OpenGL.GL_FLOAT, false, 36, new IntPtr(28));
 		}
+
 	}
 }

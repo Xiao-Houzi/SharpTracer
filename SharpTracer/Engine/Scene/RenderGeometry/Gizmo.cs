@@ -1,35 +1,28 @@
 ﻿using SharpGL;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using SharpTracer.Engine.GLAbstraction;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.Scene.RenderGeometry
 {
-	public class Gizmo : GLMesh
+	public class Gizmo : Geometry
 	{
 		public Gizmo() : base("Gizmo")
-		{
-		}
-
-		public override void InitialiseGeometry()
 		{
 			OpenGL gl = GLLayer.GL;
 			float[] vertexPositions =
 				  {// X			Y			Z			R			G			B			A			U			V			Nx		Ny		nZ	
-						0.0f,		0.0f,		0.0f,		1.0f,		1.0f,     1.0f,    0.5f,
-						0.1f,		0.0f,		0.0f,		1.0f,     0.0f,     0.0f,    1.0f,
-						0.0f,		0.1f,		0.0f,		0.0f,     1.0f,     0.0f,    1.0f,
-						0.0f,		0.0f,		0.1f,		0.0f,     0.0f,     1.0f,    1.0f,
+						0.0f,       0.0f,       0.0f,       1.0f,       1.0f,     1.0f,    0.5f,
+						0.1f,       0.0f,       0.0f,       1.0f,     0.0f,     0.0f,    1.0f,
+						0.0f,       0.1f,       0.0f,       0.0f,     1.0f,     0.0f,    1.0f,
+						0.0f,       0.0f,       0.1f,       0.0f,     0.0f,     1.0f,    1.0f,
 			   };
 			uint[] tempLines =
 				  {
 					0, 1,
 					0, 0, 2,
 					0, 0, 3,
-	            };
+				};
 
 			_indices = tempLines.Length;
 

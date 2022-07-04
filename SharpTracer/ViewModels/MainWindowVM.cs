@@ -6,8 +6,7 @@ using SharpGL;
 using System.Collections.ObjectModel;
 using SharpTracer.Base;
 using SharpTracer.Engine.Scene;
-using SharpTracer.Engine.Graphics;
-using SharpTracer.Model;
+using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine;
 
 namespace SharpTracer.ViewModels
@@ -116,7 +115,8 @@ namespace SharpTracer.ViewModels
         public MainWindowVM(SharpTracerModel model)
         {
             _model = model;
-            _renderer = new Renderer(_model.Renderer);
+            _renderer = new Renderer();
+            _model.Renderer = _renderer;
             Controls = new ControlsVM(model);
             Status = new StatusVM(model);
             Entitys = new ObservableCollection<Entity>();

@@ -10,6 +10,7 @@ using SharpTracer.Base;
 using SharpTracer.Model;
 using SharpTracer.View.Controls;
 using SharpTracer.Engine.Scene;
+using SharpTracer.Engine;
 
 namespace SharpTracer
 {
@@ -19,6 +20,7 @@ namespace SharpTracer
         #region Properties
         public Project Project
         { get => _project; }
+        public Renderer Renderer { get; set; }
         public List<Entity> Geometry
         {
             get => Project.Entities; set

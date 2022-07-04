@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using SharpTracer.Engine.Graphics;
-using SharpTracer.Engine.Scene.RenderGeometry;
+using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Maths;
-using SharpTracer.Model;
 
 namespace SharpTracer.Engine.Scene
 {
@@ -64,9 +62,7 @@ namespace SharpTracer.Engine.Scene
 
         public virtual void Initialise()
         {
-            _mesh.Initialise();
             _script?.Initialise(this);
-
         }
         public void Rotate(float x, float y, float z)
         {
@@ -78,14 +74,14 @@ namespace SharpTracer.Engine.Scene
             return new List<Entity>();
         }
 
-        public virtual void Run(float delta)
+        public virtual void Update(float delta)
         {
             _time += delta;
             _script?.Run(delta);
         }
 
         private string _name;
-        protected GLMesh _geometry;
+        protected Geometry _geometry;
         protected Geometry _mesh;
         protected Material _material;
         protected Transform _transform;

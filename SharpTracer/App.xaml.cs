@@ -35,7 +35,7 @@ namespace SharpTracer
 
 				SharpTracerModel model = new SharpTracerModel();
 				MainWindowVM mainVM = new MainWindowVM(model);
-				MainWindow window = new MainWindow() { DataContext = mainVM };
+				MainWindow window = new MainWindow(mainVM);
 
 				window.Show();
 			}

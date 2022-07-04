@@ -14,7 +14,7 @@
 			 PreviewMouseWheel="UserControl_PreviewMouseWheel"
 			 Loaded="UserControl_Loaded" SizeChanged="UserControl_SizeChanged" Background="#FF000000">
 	<Grid>
-		<sharpGL:OpenGLControl Name="GLC" RenderContextType="FBO"/>
+		<sharpGL:OpenGLControl Name="GLC" RenderContextType="FBO" />
 		<Label Content="{Binding Delta}" Foreground="AliceBlue"/>
 	</Grid>
 

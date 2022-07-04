@@ -19,8 +19,6 @@ namespace SharpEngine
     {
         #region fields
         private bool IsInitialised = false;
-        private bool drag = false;
-        private double sx, sy, dx, dy;
         #endregion
 
         public static readonly DependencyProperty RendererProperty =
@@ -57,7 +55,6 @@ namespace SharpEngine
             }
         }
 
-
         public double Delta { get { return Renderer.Delta; } }
 
         public GL3DView()
@@ -71,6 +68,7 @@ namespace SharpEngine
         private void Initialise(object sender, OpenGLRoutedEventArgs args)
         {
             GL = args.OpenGL;
+            Renderer.Initialise(GL);
         }
 
         private void Render(object sender, OpenGLRoutedEventArgs args)
@@ -86,11 +84,6 @@ namespace SharpEngine
 
         private void UserControl_Loaded(object sender, RoutedEventArgs args)
         {
-            if (RendererProperty != null && !IsInitialised)
-            {
-                Renderer.Initialise(GL);
-                IsInitialised = true;
-            }
             Renderer?.SetSize((int)ActualWidth, (int)ActualHeight);
         }
 

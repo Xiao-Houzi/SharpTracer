@@ -1,5 +1,5 @@
 ﻿using GlmSharp;
-using SharpTracer.Engine.Graphics;
+using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine.Maths;
 using SharpTracer.Engine.RayTracing;
 using SharpTracer.Engine.Scene.Textures;

@@ -8,17 +8,15 @@ using SharpTracer.Engine.Scene.RenderGeometry;
 using SharpEngine.Engine;
 using SharpTracer.Model;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.GLAbstraction
 {
     public class GLLayer
 	{
 		public static OpenGL GL;
-		private static int _width;
-		private static int _height;
-		private static float _aspect;
-		public static Mutex renderGuard = new Mutex();
+		public static Shaders Shaders
+		{ get => _shaders; set => _shaders = value; }
 		// other attributes
-		private static Shaders shaders;
+
 
 		static GLLayer()
 		{
@@ -32,7 +30,7 @@ namespace SharpTracer.Engine.Graphics
 		{
 			Console.Error.WriteLine("Initialising openGL");
 			GLLayer.GL = GL;
-			shaders = new Shaders(GL);
+			_shaders = new Shaders(GL);
 
 			// Set GL options
 			GL.Enable(OpenGL.GL_PROGRAM_POINT_SIZE);
@@ -47,7 +45,6 @@ namespace SharpTracer.Engine.Graphics
 			GL.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_FASTEST);
 			GL.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
 
-			shaders.LoadShaders(r);
 			return true;
 		}
 
@@ -61,7 +58,7 @@ namespace SharpTracer.Engine.Graphics
 		public static void BeginFrame(Renderer state)
 		{
 			if(GL is null) return;
-			renderGuard.WaitOne();
+			_renderGuard.WaitOne();
 			GL.ClearColor(0.025f, 0.05f, 0.10f,1);
 			GL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
@@ -74,7 +71,7 @@ namespace SharpTracer.Engine.Graphics
 			Geometry geometry = entity.Geometry;
 
 			// set the shader
-			GL.UseProgram(shaders.Program(entity.Material.Shader).ProgramID); //get the shader from the current image
+			GL.UseProgram(_shaders.Program(entity.Material.Shader).ProgramID); //get the shader from the current image
 
 			// get the matrices for the scene
 			float[] projmat;
@@ -91,13 +88,13 @@ namespace SharpTracer.Engine.Graphics
 		
 
 			// set the matrices for the scene 
-			GL.UniformMatrix4(shaders.Program(entity.Material.Shader).ViewlMatrix, 1, false, viewmat);
-			GL.UniformMatrix4(shaders.Program(entity.Material.Shader).ProjlMatrix, 1, false, projmat);
-			GL.UniformMatrix4(shaders.Program(entity.Material.Shader).ModelMatrix, 1, false, modlmat);
-			GL.UniformMatrix4(shaders.Program(entity.Material.Shader).DataMatrix, 1, false, data);
+			GL.UniformMatrix4(_shaders.Program(entity.Material.Shader).ViewlMatrix, 1, false, viewmat);
+			GL.UniformMatrix4(_shaders.Program(entity.Material.Shader).ProjlMatrix, 1, false, projmat);
+			GL.UniformMatrix4(_shaders.Program(entity.Material.Shader).ModelMatrix, 1, false, modlmat);
+			GL.UniformMatrix4(_shaders.Program(entity.Material.Shader).DataMatrix, 1, false, data);
 
 			// Draw the object
-			GL.BindVertexArray(geometry.Mesh.VAO[0]);
+			GL.BindVertexArray(geometry.VAO[0]);
 			GL.ActiveTexture(OpenGL.GL_TEXTURE0);
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[0]);
 			GL.ActiveTexture(OpenGL.GL_TEXTURE1);
@@ -105,21 +102,21 @@ namespace SharpTracer.Engine.Graphics
 			GL.ActiveTexture(OpenGL.GL_TEXTURE2);
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[2]);
 
-			int tex0 = GL.GetUniformLocation(shaders.Program(entity.Material.Shader).ProgramID, "texture1");
+			int tex0 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture1");
 			GL.Uniform1(tex0, 0);
-			int tex1 = GL.GetUniformLocation(shaders.Program(entity.Material.Shader).ProgramID, "texture2");
+			int tex1 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture2");
 			GL.Uniform1(tex1, 1);
-			int tex2 = GL.GetUniformLocation(shaders.Program(entity.Material.Shader).ProgramID, "texture3");
+			int tex2 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture3");
 			GL.Uniform1(tex2, 1);
 
 			switch (entity.DisplayMode)
 			{
 				case DisplayType.DISPLAY_POINTS:
-					GL.DrawElements(OpenGL.GL_POINTS, geometry.Mesh.IndexCount, null); break;
+					GL.DrawElements(OpenGL.GL_POINTS, geometry.IndexCount, null); break;
 				case DisplayType.DISPLAY_WIRES:
-					GL.DrawElements(OpenGL.GL_LINES, geometry.Mesh.IndexCount, null); break;
+					GL.DrawElements(OpenGL.GL_LINES, geometry.IndexCount, null); break;
 				case DisplayType.DISPLAY_SOLID:
-					GL.DrawElements(OpenGL.GL_TRIANGLES, geometry.Mesh.IndexCount, null); break;
+					GL.DrawElements(OpenGL.GL_TRIANGLES, geometry.IndexCount, null); break;
 			}
 		
 		}
@@ -128,7 +125,7 @@ namespace SharpTracer.Engine.Graphics
 		{
 			//draw instruments
 
-			renderGuard.ReleaseMutex();
+			_renderGuard.ReleaseMutex();
 		}
 
 		public static void Shutdown()
@@ -210,9 +207,15 @@ namespace SharpTracer.Engine.Graphics
 		}
 
 
-		Entity _background = new Entity("Background", new Geometry(new MeshPlane()), new Material());
-		Entity _gizmo = new Entity("Compass", new Geometry(new Gizmo()), new Material());
-		Entity _centroid = new Entity("Centroid", new Geometry(new Gizmo()), new Material(), null);
+		Entity _background = new Entity("Background", new MeshPlane(), new Material());
+		Entity _gizmo = new Entity("Compass", new Gizmo(), new Material());
+		Entity _centroid = new Entity("Centroid", new Gizmo(), new Material(), null);
+
+		private static Shaders _shaders;
+		private static int _width;
+		private static int _height;
+		private static float _aspect;
+		public static Mutex _renderGuard = new Mutex();
 		#endregion
 	}
 }

@@ -14,7 +14,7 @@ namespace SharpTracer.ViewModels
 		{
 			get
 			{
-				vec3 ea = _model.Renderer.ViewCamera.Position;
+				vec3 ea = _model.Renderer.Camera.Position;
 				
 				return ea;
 			}
@@ -24,7 +24,7 @@ namespace SharpTracer.ViewModels
 		{
 			get
 			{
-				return _model.Renderer.ViewCamera.Position;
+				return _model.Renderer.Camera.Position;
 			}
 		}
 

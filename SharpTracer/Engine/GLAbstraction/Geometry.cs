@@ -1,7 +1,10 @@
 ﻿using System;
 using SharpGL;
+using SharpTracer.Engine.RayTracing;
+using SharpTracer.Engine.Scene;
+using SharpTracer.Maths;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.GLAbstraction
 {
 	public enum DisplayType
 	{
@@ -10,14 +13,14 @@ namespace SharpTracer.Engine.Graphics
 		DISPLAY_SOLID,
 	};
 
-	public class GLMesh
+	public class Geometry
 	{
 		public int IndexCount
 		{ get { return _indices; } }
 		public uint[] VAO
 		{ get { return _vao; } }
 
-		public GLMesh(String name)
+		public Geometry(String name)
 		{
 			_name = name;
 			_vao = new uint[] { uint.MaxValue };
@@ -25,7 +28,7 @@ namespace SharpTracer.Engine.Graphics
 			_indices = 0;
 		}
 
-		~GLMesh()
+		~Geometry()
 		{
 			if (_vao[0] != uint.MaxValue)
 			{
@@ -36,31 +39,22 @@ namespace SharpTracer.Engine.Graphics
 			return; // TODO gracefully delete buffers from opengl
 		}
 
-		public void Initialise()
+		public virtual bool Test(Ray ray, Transform transform, Material material, float min, float max, ref Hit h)
 		{
-			if(!_initialised)
-			{
-				InitialiseGeometry();
-			}
+			return false;
 		}
-
-		public virtual void InitialiseGeometry()
-        {
-			LoadMesh(_name);
-        }
 
 		void LoadMesh(string filepath)
 		{
-			// TODO implement loading geometry
+			LoadMesh(_name);
 		}
 
 		#region Private
 		string _name;
-		bool _initialised = false;
-
 		protected int _indices;
 		protected uint[] _vao;
 		protected uint[] _buffers;
 		#endregion
 	}
+
 }

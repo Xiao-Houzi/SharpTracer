@@ -1,6 +1,5 @@
-﻿using SharpEngine.Engine.Graphics;
-using SharpTracer.Base;
-using SharpTracer.Engine.Graphics;
+﻿using SharpTracer.Base;
+using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Model.Events;
 using System;
@@ -82,7 +81,7 @@ namespace SharpTracer.View.Controls
 			switch(args.Reason)
 			{
 				case SharpTracerModelArgs.EventReason.EntitysUpdated:
-					NotifyPropertyChanged(nameof(GLMesh));
+					NotifyPropertyChanged(nameof(Geometry));
 					break;
 			}
 		}

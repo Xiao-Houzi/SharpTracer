@@ -1,26 +1,23 @@
 ﻿using SharpGL;
+using SharpTracer.Engine.GLAbstraction;
 using System;
 using System.Runtime.InteropServices;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.Scene.RenderGeometry
 {
-	public class MeshPlane : GLMesh
+	public class MeshPlane : Geometry
 	{
 
 		public MeshPlane() : base("Plane")
-		{
-		}
-
-		public override void InitialiseGeometry()
 		{
 			OpenGL gl = GLLayer.GL;
 			// initialise geometry
 			float[] vertexPositions =
 				  {// X			Y			Z			R			G			B			A			U			V			Nx		Ny		nZ	
-						-1f,		-1f,		+0f,		.1f,		.15f,		.2f,		0.5f,		0.0f,		0.0f,
-						+1f,		-1f,		+0f,		.1f,        .15f,		.2f,        1.0f,      1.0f,      0.0f,
-						+1f,		+1f,		+0f,		.1f,        .15f,		.2f,        0.5f,      1.0f,      1.0f,
-						-1f,		+1f,		+0f,		.1f,        .15f,		.2f,        1.0f,      0.0f,      1.0f,
+						-1f,        -1f,        +0f,        .1f,        .15f,       .2f,        0.5f,       0.0f,       0.0f,
+						+1f,        -1f,        +0f,        .1f,        .15f,       .2f,        1.0f,      1.0f,      0.0f,
+						+1f,        +1f,        +0f,        .1f,        .15f,       .2f,        0.5f,      1.0f,      1.0f,
+						-1f,        +1f,        +0f,        .1f,        .15f,       .2f,        1.0f,      0.0f,      1.0f,
 			   };
 			uint[] tempTris =
 					{
@@ -52,5 +49,6 @@ namespace SharpTracer.Engine.Graphics
 			gl.VertexAttribPointer(1, 4, OpenGL.GL_FLOAT, false, 36, new IntPtr(12));
 			gl.VertexAttribPointer(2, 2, OpenGL.GL_FLOAT, false, 36, new IntPtr(28));
 		}
+
 	}
 }

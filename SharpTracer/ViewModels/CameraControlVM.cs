@@ -21,11 +21,11 @@ namespace SharpTracer
 		{
 			get
 			{
-				return _model.Renderer.ViewCamera.Zoom;
+				return _model.Renderer.Camera.Zoom;
 			}
 			set
 			{
-				_model.Renderer.ViewCamera.Zoom = value;
+				_model.Renderer.Camera.Zoom = value;
 				NotifyPropertyChanged();
 			}
 		}
@@ -34,11 +34,11 @@ namespace SharpTracer
 		{
 			get
 			{
-				return _model.Renderer.ViewCamera.FOV;
+				return _model.Renderer.Camera.FOV;
 			}
 			set
 			{
-				_model.Renderer.ViewCamera.FOV = value;
+				_model.Renderer.Camera.FOV = value;
 				NotifyPropertyChanged();
 			}
 		}

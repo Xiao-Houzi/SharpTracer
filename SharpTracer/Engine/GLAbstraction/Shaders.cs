@@ -7,7 +7,7 @@ using SharpEngine.Engine;
 using SharpGL;
 using SharpGL.SceneGraph.Shaders;
 
-namespace SharpTracer.Engine.Graphics
+namespace SharpTracer.Engine.GLAbstraction
 {
 	public class Shaders
 	{
@@ -24,7 +24,6 @@ namespace SharpTracer.Engine.Graphics
 				return _program[name];
 			}
 		}
-
 		public Shaders(OpenGL GL)
 		{
 			this.GL = GL;
@@ -41,7 +40,6 @@ namespace SharpTracer.Engine.Graphics
 		{
 			return _program[programName];
 		}
-
 		uint CompileShader( uint type, String source)
 		{
 			uint shader = GL.CreateShader(type);
@@ -69,12 +67,12 @@ namespace SharpTracer.Engine.Graphics
 			return shader;
 		}
 
-		internal void LoadShaders(Renderer r)
+		public void CompileShaders(Renderer renderer)
 		{
 			uint id;
 			ShaderData sd;
 
-			foreach(KeyValuePair<string, Tuple<string, string>> shader in r.shaders)
+			foreach(KeyValuePair<string, Tuple<string, string>> shader in renderer.Shaders)
 			{
 				if ((id =CompileProgram(shader.Key, shader.Value.Item1, shader.Value.Item2)) < 999)
 				{
@@ -141,6 +139,5 @@ namespace SharpTracer.Engine.Graphics
 
 			return programBuffer;
 		}
-
 	}
 }
