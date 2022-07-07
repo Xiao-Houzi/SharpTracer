@@ -1,14 +1,26 @@
 ﻿using System;
 
-namespace SharpTracer.Base.Messaging
-{
+namespace SharpTracer.Model.Base.Messaging
+{ 
 	public class LogArgs
 	{
+		public enum DebugLevel
+        {
+			Information,
+			Debug,
+			Warning,
+			Error
+        }
+		public enum LogDestination
+        {
+			Console,
+			File
+        }
 		public Exception Exception
 		{
 			get;
 		}
-		public Level Level
+		public DebugLevel Level
 		{
 			get;
 		}
@@ -21,7 +33,7 @@ namespace SharpTracer.Base.Messaging
 			get;
 		}
 
-		public LogArgs(string message, Exception exception, Level level, LogDestination destination)
+		public LogArgs(string message, Exception exception, DebugLevel level, LogDestination destination)
 		{
 			Level = level;
 			Message = message;

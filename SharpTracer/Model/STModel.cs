@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using SharpTracer.Model.Events;
 using SharpGL;
 using System.Threading.Tasks;
 using GlmSharp;
@@ -11,6 +10,8 @@ using SharpTracer.Model;
 using SharpTracer.View.Controls;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine;
+using SharpTracer.Engine.RayTracing;
+using SharpTracer.Model.Base.Messaging;
 
 namespace SharpTracer
 {
@@ -21,6 +22,7 @@ namespace SharpTracer
         public Project Project
         { get => _project; }
         public Renderer Renderer { get; set; }
+        public Canvas Canvas { get; set; }
         public List<Entity> Geometry
         {
             get => Project.Entities; set
@@ -28,9 +30,8 @@ namespace SharpTracer
                 Project.Entities = value; NotifyPropertyChanged("Geometry");
             }
         }
-        public OpenGL GL
-        { get; internal set; }
-        private Task GLAcquiredDelegate;
+
+
         public static Entity? SelectedEntity
         { get; set; }
         public static float EntityPointsize
@@ -49,6 +50,8 @@ namespace SharpTracer
         public SharpTracerModel()
         {
             _project = new Project();
+            Canvas = new Canvas();
+            Canvas.Initialise(_project);
             Keys = new Dictionary<string, bool>()
             {
                 {"Forward", false },
@@ -64,80 +67,81 @@ namespace SharpTracer
             _project.CurrentEntity = new Entity();
             _cloudViewControls = new GeometryViewControls();
 
-            SharpMessenger.UIEvent += SharpTracerMessenger_UIEvent;
-            SharpMessenger.ModelEvent += SharpTracerMessenger_ModelEvent;
+            Messenger.UIEvent += SharpTracerMessenger_UIEvent;
+            Messenger.ModelEvent += SharpTracerMessenger_ModelEvent;
+            Canvas.CanvasChanged += Canvas_RenderingEvent;
+            Canvas.RenderComplete += Canvas_RenderComplete;
         }
+
+        private void Canvas_RenderComplete(object? sender, EventArgs e)
+        {
+            // show render has completed and save file
+        }
+
+        private void Canvas_RenderingEvent(object? sender, float e)
+        {
+            // update image and update progress bar
+        }
+
+        #region Commands
+        internal bool CanRender()
+        {
+            return true;
+        }
+        internal void Render(object parameter)
+        {
+            Canvas.Render();
+        }
+        #endregion
 
         internal void ResetView()
         {
             Project.ResetViewCamera();
         }
 
-        private void SharpTracerMessenger_ModelEvent(object sender, SharpTracerModelArgs args)
+        private void SharpTracerMessenger_ModelEvent(object sender, ModelArgs args)
         {
             switch (args.Reason)
             {
-                case SharpTracerModelArgs.EventReason.GLIsNull:
-                    GLAcquiredDelegate = ((Task)args.DataObject);
-                    SharpTracerEvent.Model(this, SharpTracerModelArgs.EventReason.AcquireGL, "");
+                case EventReason.GLIsNull:
+                    //GLAcquiredDelegate = ((Task)args.DataObject);
+                    Event.Model(this, EventReason.AcquireGL, "");
                     break;
 
-                case SharpTracerModelArgs.EventReason.GAcquired:
-                    GL = (OpenGL)args.DataObject;
-                    GLAcquiredDelegate.Start();
+                case EventReason.GAcquired:
+                    //GLAcquiredDelegate.Start();
                     break;
             }
         }
 
-        private void SharpTracerMessenger_UIEvent(object sender, SharpTracerUIArgs args)
+        private void SharpTracerMessenger_UIEvent(object sender, UIArgs args)
         {
             switch (args.Reason)
             {
-                case SharpTracerUIArgs.EventReason.CommandCloseApp:
-                    SharpTracerEvent.Model(this, SharpTracerModelArgs.EventReason.SafeToClose, "");
+                case EventReason.CommandCloseApp:
+                    
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandClear:
+                case EventReason.CommandClear:
                     ClearProject();
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandSettings:
+                case EventReason.CommandSettings:
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandOpenProjectBinary:
+                case EventReason.CommandOpenProject:
                     OpenProject((Uri)args.DataObject);
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandOpenProjectPTX:
-                    OpenProject((Uri)args.DataObject, false);
+                case EventReason.CommandCloseProject:
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandCloseProject:
+                case EventReason.CommandSaveProject:
+                    Project.Serialise();
                     break;
 
-                case SharpTracerUIArgs.EventReason.CommandExportProject:
-                    Project.ExportData();
-                    break;
-
-                case SharpTracerUIArgs.EventReason.AdjustmentMatrixChanged:
-                    break;
-
-                case SharpTracerUIArgs.EventReason.AdjustmentAdjustChanged:
-                    break;
-                case SharpTracerUIArgs.EventReason.CommandCleanupProject:
-                    FilterGeometrys();
                     break;
             }
-        }
-
-        private void FilterGeometrys()
-        {
-
-        }
-
-        private void ProcessingComplete()
-        {
-            MessageBox.Show("Processing Complete");
         }
 
         private void ClearProject()
@@ -148,15 +152,7 @@ namespace SharpTracer
         private void OpenProject(Uri path, bool binary = true)
         {
             this.path = path;
-
-            if (GL == null)
-            {
-                if (binary)
-                    SharpTracerEvent.Model(this, SharpTracerModelArgs.EventReason.GLIsNull, new Task(() => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandOpenProjectBinary, path); }));
-                else
-                    SharpTracerEvent.Model(this, SharpTracerModelArgs.EventReason.GLIsNull, new Task(() => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandOpenProjectPTX, path); }));
-                return;
-            }
+            
         }
 
         private void ProgressCB(int current, int total)

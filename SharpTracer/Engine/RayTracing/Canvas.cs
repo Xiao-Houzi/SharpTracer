@@ -8,20 +8,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SharpTracer.Engine.RayTracing
 {
-    internal class Canvas
+    public class Canvas
     {
-        Canvas()
+        public event EventHandler<float> CanvasChanged;
+        public event EventHandler<EventArgs> RenderComplete;
+        public Canvas()
         {
             _samples = 500;
         }
 
-        void Initialise(Project project)
+        public void Initialise(Project project)
         {
             _project = project;
+           
+        }
+        public void Render()
+        {
             _width = _project.FrameWidth;
             _height = _project.FrameHeight;
             _pixels = new vec4[_width * _height];
@@ -32,11 +39,6 @@ namespace SharpTracer.Engine.RayTracing
                     _pixels[i * _width + j] = new vec4((1.0f / _height) * i, (1.0f / _width) * j, 0, 0);
                     _collected[i * _width + j] = new vec4(0);
                 }
-            _data = new char[_width * _height * 3];
-        }
-
-        void Render()
-        {
             Task.Run(() =>
             {
                 _rendering = true;
@@ -54,11 +56,29 @@ namespace SharpTracer.Engine.RayTracing
                             v = (i + y) / _height;
                             SetPixel((int)j, (int)i, sample, GetColour(u, v));
                         }
-                    _showframe = true;
+                    CanvasChanged.Invoke(this, 1/_samples * sample);
                 }
                 _rendering = false;
+                RenderComplete.Invoke(this, null);
             });
 
+        }
+        public byte[] GetData()
+        {
+            _renderGuard.WaitOne();
+            vec4[] data = _pixels;
+            _renderGuard.ReleaseMutex();
+            byte[] bytes = new byte[data.Length * 4];
+            int index = 0;
+            foreach (vec4 v in data)
+            {
+                bytes[index + 0] = (byte)(v.r * 255);
+                bytes[index + 0] = (byte)(v.r * 255);
+                bytes[index + 0] = (byte)(v.r * 255);
+                bytes[index + 0] = (byte)(v.r * 255);
+                index += 4;
+            }
+            return bytes;
         }
 
         internal vec4 GetColour(float u, float v)
@@ -103,34 +123,19 @@ namespace SharpTracer.Engine.RayTracing
         void SetPixel(int x, int y, int sample, vec4 colour)
         {
             _collected[y * _width + x] += colour;
+            _renderGuard.WaitOne();
             _pixels[y * _width + x] = _collected[y * _width + x] / (float)(sample + 1.0f);
+            _renderGuard.ReleaseMutex();
         }
 
         int GetWidth() { return _width; }
         int GetHeight() { return _height; }
 
-        char[] GetData()
-        {
-            for (int i = 0; i < _height; i++)
-                for (int j = 0; j < _width; j++)
-                {
-                    int datapos = i * _width + j;
-                    int pixelpos = i * _width + j;
-
-                    _data[datapos * 3 + 0] = (char)(Math.Min(Math.Sqrt(_pixels[pixelpos].r), 1.0f) * 255.0f);
-                    _data[datapos * 3 + 1] = (char)(Math.Min(Math.Sqrt(_pixels[pixelpos].g), 1.0f) * 255.0f);
-                    _data[datapos * 3 + 2] = (char)(Math.Min(Math.Sqrt(_pixels[pixelpos].b), 1.0f) * 255.0f);
-                }
-            return _data;
-        }
-
-
         #region Private
+        private Mutex _renderGuard;
         int _width, _height;
         vec4[] _pixels, _collected;
-        char[] _data;
         private int _samples;
-        private bool _showframe;
         private bool _rendering;
         private Project _project;
         #endregion

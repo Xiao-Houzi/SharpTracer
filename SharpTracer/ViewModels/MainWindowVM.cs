@@ -1,6 +1,5 @@
 ﻿using SharpEngine.Engine.Graphics;
 using SharpTracer.View.Controls;
-using SharpTracer.Model.Events;
 using GlmSharp;
 using SharpGL;
 using System.Collections.ObjectModel;
@@ -8,6 +7,7 @@ using SharpTracer.Base;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine;
+using SharpTracer.Model.Base.Messaging;
 
 namespace SharpTracer.ViewModels
 {
@@ -32,7 +32,7 @@ namespace SharpTracer.ViewModels
             Title = "SharpTracer - Geometry Viewer",
             CommandAbout = new Command(
             () => true,
-            (x) => { SharpTracerEvent.UI(null, SharpTracerUIArgs.EventReason.CommandAbout, ""); },
+            (x) => { Event.UI(null, EventReason.CommandAbout, ""); },
             "About")
         };
         public Renderer Renderer
@@ -129,69 +129,67 @@ namespace SharpTracer.ViewModels
 
 
             CommandCloseApp = new Command(() => true,
-                (x) => { AppCloseRequested = true; SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandCloseApp, "CloseApp"); });
+                (x) => { AppCloseRequested = true; Event.UI(this, EventReason.CommandCloseApp, "CloseApp"); });
             
 
             Command CommandClear = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandClear, ""); }, "Clear");
-            Command CommandOpenProjectJson = new Command(() => true,
-                (x) => { OpenProjectJson(); }, "OpenProjectJson");
+                (x) => { Event.UI(this, EventReason.CommandClear, ""); }, "Clear");
+            Command CommandOpenProject = new Command(() => true,
+                (x) => { Event.UI(this, EventReason.CommandOpenProject, ""); }, "OpenProject");
             Command CommandCloseProject = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandCloseProject, ""); }, "CloseProject");
-            Command CommandExport = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandExportProject, ""); }, "ExportProject");
-            Command CommandClean = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandCleanupProject, ""); }, "CleanupProject");
+                (x) => { Event.UI(this, EventReason.CommandCloseProject, ""); }, "CloseProject");
+            Command CommandSaveProject = new Command(() => true,
+                (x) => { Event.UI(this, EventReason.CommandSaveProject, ""); }, "SaveProject");
             Command CommandSettings = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandSettings, ""); }, "Settings");
+                (x) => { Event.UI(this, EventReason.CommandSettings, ""); }, "Settings");
             Command CommandRender = new Command(() => true,
-                (x) => { SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.CommandRender, ""); }, "Render");
+                (x) => { Event.UI(this, EventReason.CommandRender, ""); }, "Render");
 
 
             Ribbon.Add(new RibbonCommandVM("Project", "Clear", "", "Clear Data", CommandClear));
-            Ribbon.Add(new RibbonCommandVM("Project", "Open JSON", "", "Open a project from disk.", CommandOpenProjectJson));
-            Ribbon.Add(new RibbonCommandVM("Project", "Save", "", "Select an export method to output clouds or models.", CommandExport));
-            Ribbon.Add(new RibbonCommandVM("Project", "Cleanup", "", "Remove noise and correct alignment.", CommandClean));
+            Ribbon.Add(new RibbonCommandVM("Project", "Open", "", "Open a project from disk.", CommandOpenProject));
+            Ribbon.Add(new RibbonCommandVM("Project", "Close", "", "Close the current project.", CommandCloseProject));
+            Ribbon.Add(new RibbonCommandVM("Project", "Save", "", "Save a project to disk.", CommandSaveProject));
             Ribbon.Add(new RibbonCommandVM("General", "Settings", "", "Change settings for the project.", CommandSettings));
-            Ribbon.Add(new RibbonCommandVM("Tools", "Render", "", "Calcuklate the product of two matrices.", CommandRender));
+            Ribbon.Add(new RibbonCommandVM("Tools", "Render", "", "Render the current project as an image.", CommandRender));
 
-            SharpMessenger.UIEvent += SharpTracerMessenger_UIEvent;
-            SharpMessenger.ModelEvent += SharpTracerMessenger_ModelEvent;
+            Messenger.UIEvent += SharpTracerMessenger_UIEvent;
+            Messenger.ModelEvent += SharpTracerMessenger_ModelEvent;
         }
 
-        private void SharpTracerMessenger_ModelEvent(object sender, SharpTracerModelArgs args)
+        private void SharpTracerMessenger_ModelEvent(object sender, ModelArgs args)
         {
             App.Current?.Dispatcher.Invoke(() =>
             {
                 switch (args.Reason)
                 {
-                    case SharpTracerModelArgs.EventReason.SafeToClose:
+                    case EventReason.SafeToClose:
                         if (AppCloseRequested)
                         {
                             ((App)App.Current).log.CloseLog();
                             App.Current.MainWindow?.Close();
                         }
                         break;
-                    case SharpTracerModelArgs.EventReason.AcquireGL:
+                    case EventReason.AcquireGL:
                         while (GL == null) { }
-                        SharpTracerEvent.Model(this, SharpTracerModelArgs.EventReason.GAcquired, GL);
+                        Event.Model(this, EventReason.GAcquired, GL);
                         break;
-                    case SharpTracerModelArgs.EventReason.ProjectLoaded:
+                    case EventReason.ProjectLoaded:
                         _expandablePanel.Tabs[0].Update();
                         break;
                 }
             });
         }
 
-        private void SharpTracerMessenger_UIEvent(object sender, SharpTracerUIArgs args)
+        private void SharpTracerMessenger_UIEvent(object sender, UIArgs args)
         {
             switch (args.Reason)
             {
-                case SharpTracerUIArgs.EventReason.CommandAbout:
+                case EventReason.CommandAbout:
                     break;
-                case SharpTracerUIArgs.EventReason.CommandRender:
+                case EventReason.CommandRender:
                     break;
-                case SharpTracerUIArgs.EventReason.EntitySelected:
+                case EventReason.EntitySelected:
 
                     break;
             }

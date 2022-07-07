@@ -43,7 +43,7 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
 			GL.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_FASTEST);
-			GL.PolygonMode(OpenGL.GL_FRONT_AND_BACK, OpenGL.GL_FILL);
+			GL.PolygonMode(OpenGL.GL_FRONT, OpenGL.GL_LINE);
 
 			return true;
 		}
@@ -109,16 +109,16 @@ namespace SharpTracer.Engine.GLAbstraction
 			int tex2 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture3");
 			GL.Uniform1(tex2, 1);
 
-			switch (entity.DisplayMode)
-			{
-				case DisplayType.DISPLAY_POINTS:
-					GL.DrawElements(OpenGL.GL_POINTS, geometry.IndexCount, null); break;
-				case DisplayType.DISPLAY_WIRES:
-					GL.DrawElements(OpenGL.GL_LINES, geometry.IndexCount, null); break;
-				case DisplayType.DISPLAY_SOLID:
-					GL.DrawElements(OpenGL.GL_TRIANGLES, geometry.IndexCount, null); break;
-			}
-		
+            switch (entity.DisplayMode)
+            {
+                case DisplayType.DISPLAY_POINTS:
+                    GL.DrawElements(OpenGL.GL_POINTS, geometry.IndexCount, null); break;
+                case DisplayType.DISPLAY_WIRES:
+                    GL.DrawElements(OpenGL.GL_LINES, geometry.IndexCount, null); break;
+                case DisplayType.DISPLAY_SOLID:
+                    GL.DrawElements(OpenGL.GL_TRIANGLES, geometry.IndexCount, null); break;
+
+            }
 		}
 
 		public static void EndFrame()

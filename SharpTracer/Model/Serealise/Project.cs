@@ -43,6 +43,8 @@ namespace SharpTracer.Model
 
         public Project()
         {
+            FrameWidth = 1024;
+            FrameHeight = 576;
             _viewCamera = new Camera();
             _entities = new List<Entity>();
             kdTree = new KdTree(3, new Range[] { new Range(-10, 10), new Range(-10, 10), new Range(-2, 10) }, 20);
@@ -64,7 +66,7 @@ namespace SharpTracer.Model
             Name = path.LocalPath;
         }
 
-        internal void ExportData()
+        internal void Serialise()
         {
             throw new NotImplementedException();
         }

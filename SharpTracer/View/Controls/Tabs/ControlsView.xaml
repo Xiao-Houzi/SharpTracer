@@ -20,64 +20,7 @@
 			</StackPanel>
 		</StackPanel>
 		<Grid DockPanel.Dock="Left" Margin="5">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-			</Grid.RowDefinitions>
-			<TextBlock Text="{Binding Matrix[0]}" Grid.Row="0" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[1]}" Grid.Row="0" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[2]}" Grid.Row="0" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[3]}" Grid.Row="0" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[4]}" Grid.Row="1" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[5]}" Grid.Row="1" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[6]}" Grid.Row="1" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[7]}" Grid.Row="1" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[8]}" Grid.Row="2" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[9]}" Grid.Row="2" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[10]}" Grid.Row="2" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[11]}" Grid.Row="2" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[12]}" Grid.Row="3" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[13]}" Grid.Row="3" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[14]}" Grid.Row="3" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Matrix[15]}" Grid.Row="3" Grid.Column="3" Style="{StaticResource Matrix}"/>
-		</Grid>
-		<Grid DockPanel.Dock="Right" Margin="5">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-				<ColumnDefinition Width="40"/>
-			</Grid.ColumnDefinitions>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-				<RowDefinition Height="18"/>
-			</Grid.RowDefinitions>
-			<TextBlock Text="{Binding Other[0]}" Grid.Row="0" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[1]}" Grid.Row="0" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[2]}" Grid.Row="0" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[3]}" Grid.Row="0" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[4]}" Grid.Row="1" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[5]}" Grid.Row="1" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[6]}" Grid.Row="1" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[7]}" Grid.Row="1" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[8]}" Grid.Row="2" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[9]}" Grid.Row="2" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[10]}" Grid.Row="2" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[11]}" Grid.Row="2" Grid.Column="3" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[12]}" Grid.Row="3" Grid.Column="0" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[13]}" Grid.Row="3" Grid.Column="1" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[14]}" Grid.Row="3" Grid.Column="2" Style="{StaticResource Matrix}"/>
-			<TextBlock Text="{Binding Other[15]}" Grid.Row="3" Grid.Column="3" Style="{StaticResource Matrix}"/>
+			
 		</Grid>
 	  
 	</DockPanel>

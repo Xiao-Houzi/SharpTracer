@@ -1,4 +1,4 @@
-﻿using SharpTracer.Base.Messaging;
+﻿using SharpTracer.Model.Base.Messaging;
 using System;
 using System.ComponentModel;
 using System.Globalization;

@@ -17,7 +17,7 @@ namespace SharpTracer.Engine
     {
         public Dictionary<string, Tuple<string, string>> Shaders { get => _shaders; set { _shaders = value; } }
         public List<Entity> Entities
-        { get => _project?.Entities; set => _project.Entities = value; }
+        { get => _project.Entities; set => _project.Entities = value; }
         public Camera Camera
         { get => _camera; set => _camera = value; }
         public bool Orthographic
@@ -28,6 +28,7 @@ namespace SharpTracer.Engine
         public int CanvasHeight { get => _canvasHeight; }
         public float AspectRatio
         { get => _canvasHeight / _canvasWidth; }
+        public bool RenderingCanvas { get; set; }
 
 
         public float Delta
@@ -85,6 +86,11 @@ namespace SharpTracer.Engine
 
             foreach (Entity entity in _project.Entities)
                 entity.Update(_delta);
+
+            if (RenderingCanvas)
+            {
+
+            }
         }
         public void Render(OpenGL gl)
         {

@@ -1,5 +1,5 @@
 ﻿using SharpTracer.Base;
-using SharpTracer.Model.Events;
+using SharpTracer.Model.Base.Messaging;
 using SharpTracer.View;
 using SharpTracer.ViewModels;
 using System;
@@ -18,7 +18,7 @@ namespace SharpTracer
     /// </summary>
     public partial class App : Application
     {
-		SharpMessenger messenger;
+		Messenger messenger;
 		public DiagnosticLog log;
 		public string StartUpFile;
 		public string logName = "DiagnosticLog.txt";
@@ -27,7 +27,7 @@ namespace SharpTracer
 		{
 			try
 			{
-				messenger = new SharpMessenger();
+				messenger = new Messenger();
 				if (startupEventArgs.Args.Length > 0) StartUpFile = startupEventArgs.Args[0];
 				log = new DiagnosticLog();
 				//log.Path = "D:/";

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharpTracer.Base.Messaging
+namespace SharpTracer.Model.Base.Messaging
 {
 	public enum Status
 	{

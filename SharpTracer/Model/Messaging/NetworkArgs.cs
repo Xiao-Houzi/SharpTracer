@@ -1,7 +1,7 @@
 ﻿
 
 
-namespace SharpTracer.Base.Messaging
+namespace SharpTracer.Model.Base.Messaging
 {
     public class NetworkArgs
     {

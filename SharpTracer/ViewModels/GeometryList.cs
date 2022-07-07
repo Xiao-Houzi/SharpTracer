@@ -1,7 +1,7 @@
 ﻿using SharpTracer.Base;
 using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine.Scene;
-using SharpTracer.Model.Events;
+using SharpTracer.Model.Base.Messaging;
 using SharpTracer.View.Controls;
 using System;
 using System.Collections.Generic;
@@ -53,7 +53,7 @@ namespace SharpTracer.ViewModels
         {
             get
             {
-                SharpTracerEvent.UI(this, SharpTracerUIArgs.EventReason.EntitySelected, SharpTracerModel.SelectedEntity);
+                Event.UI(this, EventReason.EntitySelected, SharpTracerModel.SelectedEntity);
                 return SharpTracerModel.SelectedEntity;
             }
             set
@@ -74,14 +74,14 @@ namespace SharpTracer.ViewModels
             Icon = "";
             Ribbon.Add(new RibbonCommandVM("", "X", "X", "", new Command(() => true, execute)));
 
-            SharpMessenger.ModelEvent += SharpTracerMessenger_ModelEvent;
+            Messenger.ModelEvent += SharpTracerMessenger_ModelEvent;
         }
 
-        private void SharpTracerMessenger_ModelEvent(object sender, SharpTracerModelArgs args)
+        private void SharpTracerMessenger_ModelEvent(object sender, ModelArgs args)
         {
             switch (args.Reason)
             {
-                case SharpTracerModelArgs.EventReason.EntitysUpdated:
+                case EventReason.AddedEntity:
                     NotifyPropertyChanged(nameof(Geometry));
                     break;
             }

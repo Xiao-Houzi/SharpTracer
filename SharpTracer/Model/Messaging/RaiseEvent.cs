@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using static SharpTracer.Model.Base.Messaging.LogArgs;
 
-
-namespace SharpTracer.Base.Messaging
+namespace SharpTracer.Model.Base.Messaging
 {
     public class RaiseEvent
     {
@@ -22,24 +22,21 @@ namespace SharpTracer.Base.Messaging
             Args = args;
         }
 
-        public static void UI(object sender, object eventReason, object dataObject)
+        public static void UI(object sender, EventReason eventReason, object dataObject)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
 			Messenger.Send(new RaiseEvent(sender, new UIArgs(eventReason, dataObject)));
 #pragma warning restore CS0618 // Type or member is obsolete
 		}
 
-        public static void Model(object sender, object eventReason, object dataObject)
+        public static void Model(object sender, EventReason eventReason, object dataObject)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
 			Messenger.Send(new RaiseEvent(sender, new ModelArgs(eventReason, dataObject)));
 #pragma warning restore CS0618 // Type or member is obsolete
 		}
 
-        public static void DataOperation(object sender, OperationType operationType, Operation operation, Uri uri, string message, int progressID)
-        {
-            Messenger.Send(new RaiseEvent(sender, new DataOperationArgs(operationType, operation, uri, message, progressID)));
-        }
+
 
         public static void Network(object sender, string reason, string message)
         {
@@ -51,24 +48,24 @@ namespace SharpTracer.Base.Messaging
             Messenger.Send(new RaiseEvent(sender, new ProgressArgs(progressID, ID, caption, message, status, max)));
         }
 
-        public static void Log(object sender, Level level, string message, Exception exception = null)
+        public static void Log(object sender, DebugLevel level, string message, Exception exception = null)
         {
-            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, level, LogDestination.Log)));
+            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, level, LogDestination.Console)));
         }
 
         public static void Console(object sender, string message, Exception exception = null)
         {
-            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, Level.INFO, LogDestination.Console)));
+            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, DebugLevel.Information, LogDestination.Console)));
         }
 
-        public static void Exception(object sender, Level level, string message, Exception exception = null,
+        public static void Exception(object sender, DebugLevel level, string message, Exception exception = null,
             [CallerLineNumber] int lineNumber = 0,
             [CallerMemberName] string caller = "",
             [CallerFilePath] string callingFilePath = "")
         {
             message = string.Format("ERROR::\t in file {0} in function {1} at line {2}\n\t Message: {3}\n",
                     callingFilePath, caller, lineNumber, message);
-            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, level, LogDestination.Exception)));
+            Messenger.Send(new RaiseEvent(sender, new LogArgs(message, exception, level, LogDestination.Console)));
         }
 
     }

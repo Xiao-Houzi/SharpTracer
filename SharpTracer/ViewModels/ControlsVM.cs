@@ -17,19 +17,6 @@ namespace SharpTracer.ViewModels
         public RibbonVM Ribbon { get; set; }
         public ExpandablePanelVM Parent { get; set; }
         public object Content => this;
-
-        public Command ShowGizmos
-        {
-            get
-            {
-                return _showGizmos;
-            }
-            set
-            {
-                _showGizmos = value; NotifyPropertyChanged();
-            }
-        }
-
         internal CameraControlVM GeometryControl
         {
             get
@@ -43,16 +30,27 @@ namespace SharpTracer.ViewModels
             }
         }
 
+        public Command CommandShowGizmos
+        {
+            get;
+            set;
+        }
+
         public ControlsVM(SharpTracerModel model)
         {
             _model = model;
 
             cloudPanel = new CameraControlVM(model);
 
-            _showGizmos = new Command(CanShowGizmos, ExecuteShowGizmos);
+            CommandShowGizmos = new Command(CanShowGizmos, ExecuteShowGizmos);
+
+            Ribbon = new RibbonVM();
+            Icon = "";
+            Ribbon.Groups.Add(new RibbonGroupVM());
+            Ribbon.Add(new RibbonCommandVM("", "Render", "X", "", new Command(model.CanRender, model.Render)));
+
+            //SharpMessenger.ModelEvent += SharpTracerMessenger_ModelEvent;
         }
-
-
 
         private void ExecuteShowGizmos(object Parameter)
         {

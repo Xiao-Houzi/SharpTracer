@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SharpTracer.Base.Messaging
+namespace SharpTracer.Model.Base.Messaging
 {
     public class Messenger
     {
@@ -14,20 +14,14 @@ namespace SharpTracer.Base.Messaging
 
         public delegate void LogMessage(object sender, LogArgs args);
         public delegate void NetworkMessage(object sender, NetworkArgs args);
-#pragma warning disable CS0618 // Type or member is obsolete
 		public delegate void UIMessage(object sender,UIArgs args);
-#pragma warning restore CS0618 // Type or member is obsolete
-#pragma warning disable CS0618 // Type or member is obsolete
 		public delegate void ModelMessage(object sender, ModelArgs args);
-#pragma warning restore CS0618 // Type or member is obsolete
-		public delegate void DataOperationMessage(object sender, DataOperationArgs args);
 		public delegate void ProgressMessage(object sender, ProgressArgs args);
 
 		public static event LogMessage LogEvent;
         public static event NetworkMessage NetworkEvent;
         public static event UIMessage UIEvent;
         public static event ModelMessage ModelEvent;
-        public static event DataOperationMessage DataOperationEvent;
 		public static event ProgressMessage ProgressEvent;
 
 
@@ -97,10 +91,6 @@ namespace SharpTracer.Base.Messaging
 
                 case nameof(ProgressArgs):
                     ProgressEvent?.Invoke(m.Sender, (ProgressArgs)m.Args);
-					break;
-
-				case nameof(DataOperationArgs):
-					DataOperationEvent?.Invoke(m.Sender, (DataOperationArgs)m.Args);
 					break;
 			}
         }
