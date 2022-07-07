@@ -7,6 +7,9 @@ using SharpTracer.Engine.Scene;
 using System.Collections.Generic;
 using Range = SharpEngine.Maths.Range;
 using SharpTracer.Engine;
+using SharpTracer.Model.Base.Messaging;
+using SharpTracer.Engine.Scene.RenderGeometry;
+using GlmSharp;
 
 namespace SharpTracer.Model
 {
@@ -46,29 +49,38 @@ namespace SharpTracer.Model
             FrameWidth = 1024;
             FrameHeight = 576;
             _viewCamera = new Camera();
+            _sceneCamera = new Camera();
             _entities = new List<Entity>();
             kdTree = new KdTree(3, new Range[] { new Range(-10, 10), new Range(-10, 10), new Range(-2, 10) }, 20);
+
+            Messenger.ModelEvent += ModelEventHandler;
         }
 
-        public void Load(Uri path, Type script)
+        private void ModelEventHandler(object sender, ModelArgs args)
         {
-            Entity cloud = new Entity();
+            switch (args.Reason)
+            {
+                case EventReason.LoadProject:
+                    Deserialise();
+                    break;
 
-            Entities.Add(cloud);
-            CurrentEntity = Entities[Entities.IndexOf(cloud)];
-            String[] files;
-            string layer;
+                case EventReason.SaveProject:
+                    Serialise();
+                    break;
 
-            // load a projrct object
-            files = Directory.GetFiles(path.LocalPath, "*.ptx");
-            layer = "Model";
+                case EventReason.ResetViewCamera:
+                    ResetViewCamera();
+                    break;
 
-            Name = path.LocalPath;
+                case EventReason.AddedEntity:
+                    AddEntity();
+                    break;
+            }
         }
 
-        internal void Serialise()
+        public void Load()
         {
-            throw new NotImplementedException();
+            Name = "New Scene";
         }
 
         #region private
@@ -78,9 +90,25 @@ namespace SharpTracer.Model
         private Entity _currentEntity;
         private KdTree kdTree;
 
-        internal void ResetViewCamera()
+        private void ResetViewCamera()
+        {
+            _viewCamera.Reset();
+        }
+        private void Serialise()
         {
             throw new NotImplementedException();
+        }
+        private void Deserialise()
+        {
+            throw new NotImplementedException();
+        }
+        private void AddEntity()
+        {
+            string type = "Sphere";
+            int number = 0;
+            Entity entity = new Entity($"{type}{number}", new MeshSphere(), new Material());
+
+            Entities.Add(entity);
         }
         #endregion
     }

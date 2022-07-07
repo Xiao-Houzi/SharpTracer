@@ -18,6 +18,7 @@ namespace SharpTracer.Model.Base.Messaging
         CommandCloseProject,
         CommandSaveProject,
         CommandRender,
+        CommandResetViewCamera,
         CommandClear,
 
         RenderStarted,
@@ -40,6 +41,10 @@ namespace SharpTracer.Model.Base.Messaging
         AcquireGL,
         ProjectLoaded,
         SafeToClose,
+        SaveProject,
+        LoadProject,
+        ResetViewCamera,
+        RendererInitialised,
     }
     internal class Event : RaiseEvent
     {

@@ -28,7 +28,8 @@ namespace SharpTracer.Engine.Scene
         public Material()
         {
             Shader = "Default";
-            _textures = new uint[] { 0, 1, 2 };
+            Colour = new vec4(1);
+            _textures = new uint[16];
         }
         public void SetColour(vec4 colour, int slot = 0)
         {
@@ -37,7 +38,11 @@ namespace SharpTracer.Engine.Scene
             val[slot, 1] = colour.g;
             val[slot, 2] = colour.b;
             val[slot, 3] = colour.a;
+        }
 
+        public void AddTexture(uint texture)
+        {
+            _textures[_numberTextures++] = texture;
         }
 
         public virtual bool Scattered(Ray ray, Hit hit, ref vec4 attenuation, ref Ray scattered)
@@ -56,5 +61,6 @@ namespace SharpTracer.Engine.Scene
         ITexture emit;
 
         private uint[] _textures;
+        private uint _numberTextures = 0;
     }
 }

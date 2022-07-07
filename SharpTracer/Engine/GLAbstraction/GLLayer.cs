@@ -26,10 +26,9 @@ namespace SharpTracer.Engine.GLAbstraction
 		{
 		}
 
-		public static bool Initialise(Renderer r, OpenGL GL)
+		public static bool Initialise(Renderer r, OpenGL gl)
 		{
-			Console.Error.WriteLine("Initialising openGL");
-			GLLayer.GL = GL;
+			GL = gl;
 			_shaders = new Shaders(GL);
 
 			// Set GL options
@@ -43,8 +42,6 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
 			GL.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_FASTEST);
-			GL.PolygonMode(OpenGL.GL_FRONT, OpenGL.GL_LINE);
-
 			return true;
 		}
 
@@ -85,7 +82,7 @@ namespace SharpTracer.Engine.GLAbstraction
 			float[] viewmat = camera.Matrix.ToArray();
 			float[] modlmat = ModelMatrix(entity, geometry).ToArray();
 			float[] data = new float[16];
-		
+            int[] texture = new int[16];
 
 			// set the matrices for the scene 
 			GL.UniformMatrix4(_shaders.Program(entity.Material.Shader).ViewlMatrix, 1, false, viewmat);
@@ -102,12 +99,11 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.ActiveTexture(OpenGL.GL_TEXTURE2);
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[2]);
 
-			int tex0 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture1");
-			GL.Uniform1(tex0, 0);
-			int tex1 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture2");
-			GL.Uniform1(tex1, 1);
-			int tex2 = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, "texture3");
-			GL.Uniform1(tex2, 1);
+			for (int i = 0; i < entity.Material.Texture.Length; i++)
+			{
+                texture[i] = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, $"texture{i}");
+				GL.Uniform1(texture[i], entity.Material.Texture[i]);
+			}
 
             switch (entity.DisplayMode)
             {
@@ -117,7 +113,6 @@ namespace SharpTracer.Engine.GLAbstraction
                     GL.DrawElements(OpenGL.GL_LINES, geometry.IndexCount, null); break;
                 case DisplayType.DISPLAY_SOLID:
                     GL.DrawElements(OpenGL.GL_TRIANGLES, geometry.IndexCount, null); break;
-
             }
 		}
 
@@ -132,10 +127,32 @@ namespace SharpTracer.Engine.GLAbstraction
 		{
 
 		}
-
+		public static void RenderSolid()
+        {
+			GL.PolygonMode(OpenGL.GL_FRONT, OpenGL.GL_FILL);
+		}
+		public static void RenderWireframe()
+        {
+			GL.PolygonMode(OpenGL.GL_FRONT, OpenGL.GL_LINE);
+		}
 		public static void SetTexture(uint texture)
 		{
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, texture);
+		}
+		public static uint GenerateTexture()
+        {
+			uint[] textureID = new uint[1];
+			GL.GenTextures(1, textureID);
+			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID[0]);
+			uint[] array = new uint[] { OpenGL.GL_NEAREST };
+			GL.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, array);
+			GL.TexParameterI(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, array);
+			return textureID[0];
+		}
+		public static void UploadTexture(int width, int height, byte[] data, uint textureID)
+        {
+			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID);
+			GL.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA, width, height, 0, OpenGL.GL_RGBA, OpenGL.GL_BYTE, data);
 		}
 
 		static mat4 ModelMatrix(Entity entity, Geometry image)

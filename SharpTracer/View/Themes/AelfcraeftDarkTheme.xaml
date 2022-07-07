@@ -7,7 +7,7 @@
 	</ResourceDictionary.MergedDictionaries>
 
 
-    <Style x:Key="DarkTheme"  BasedOn="{StaticResource AelfcraeftLightTheme}">
+    <Style x:Key="DarkTheme"  BasedOn="{StaticResource AelfcraeftTheme}">
 		<Style.Resources>
 
 

@@ -21,14 +21,21 @@ namespace SharpTracer
         #region Properties
         public Project Project
         { get => _project; }
-        public Renderer Renderer { get; set; }
-        public Canvas Canvas { get; set; }
+        public Renderer Renderer
+        { get; set; }
+        public Canvas Canvas
+        { get; set; }
         public List<Entity> Geometry
         {
             get => Project.Entities; set
             {
                 Project.Entities = value; NotifyPropertyChanged("Geometry");
             }
+        }
+        public static Dictionary<string, bool> Keys
+        {
+            get;
+            internal set;
         }
 
 
@@ -39,11 +46,9 @@ namespace SharpTracer
         public bool Isolate
         { get; internal set; }
         public bool ShowTools { get; set; }
-        public static Dictionary<string, bool> Keys
-        {
-            get;
-            internal set;
-        }
+        public bool IsRendering { get; private set; }
+        public bool RenderComplete { get; private set; }
+        public float RenderPercent { get; private set; }
 
         #endregion
 
@@ -67,20 +72,8 @@ namespace SharpTracer
             _project.CurrentEntity = new Entity();
             _cloudViewControls = new GeometryViewControls();
 
-            Messenger.UIEvent += SharpTracerMessenger_UIEvent;
-            Messenger.ModelEvent += SharpTracerMessenger_ModelEvent;
-            Canvas.CanvasChanged += Canvas_RenderingEvent;
-            Canvas.RenderComplete += Canvas_RenderComplete;
-        }
-
-        private void Canvas_RenderComplete(object? sender, EventArgs e)
-        {
-            // show render has completed and save file
-        }
-
-        private void Canvas_RenderingEvent(object? sender, float e)
-        {
-            // update image and update progress bar
+            Messenger.UIEvent +=HandleUIEvent;
+            Messenger.ModelEvent += HandleModelEvent;
         }
 
         #region Commands
@@ -88,21 +81,16 @@ namespace SharpTracer
         {
             return true;
         }
-        internal void Render(object parameter)
-        {
-            Canvas.Render();
-        }
+
         #endregion
 
-        internal void ResetView()
-        {
-            Project.ResetViewCamera();
-        }
-
-        private void SharpTracerMessenger_ModelEvent(object sender, ModelArgs args)
+        private void HandleModelEvent(object sender, ModelArgs args)
         {
             switch (args.Reason)
             {
+                case EventReason.RendererInitialised:
+                    _project.Load();
+                    break;
                 case EventReason.GLIsNull:
                     //GLAcquiredDelegate = ((Task)args.DataObject);
                     Event.Model(this, EventReason.AcquireGL, "");
@@ -111,10 +99,27 @@ namespace SharpTracer
                 case EventReason.GAcquired:
                     //GLAcquiredDelegate.Start();
                     break;
+
+                case EventReason.RenderStarted:
+                    IsRendering = true;
+                    Renderer.RenderingCanvas = true;
+                    break;
+
+                case EventReason.RenderUpdated:
+                    RenderPercent = (float)args.DataObject;
+                    Renderer.UpdateCanvasImage(Canvas.GetData());
+                    break;
+
+                case EventReason.RenderEnded:
+                    IsRendering = false;
+                    RenderComplete = true;
+                    Renderer.RenderingCanvas = false;
+                    Renderer.CanvasComplete = true;
+                    break;
             }
         }
 
-        private void SharpTracerMessenger_UIEvent(object sender, UIArgs args)
+        private void HandleUIEvent(object sender, UIArgs args)
         {
             switch (args.Reason)
             {
@@ -131,15 +136,20 @@ namespace SharpTracer
 
                 case EventReason.CommandOpenProject:
                     OpenProject((Uri)args.DataObject);
+                    RaiseEvent.Model(this, EventReason.LoadProject, null);
                     break;
 
                 case EventReason.CommandCloseProject:
                     break;
 
                 case EventReason.CommandSaveProject:
-                    Project.Serialise();
+                    // check nothing is preventing saving
+                    RaiseEvent.Model(this, EventReason.SaveProject, null);
                     break;
 
+                case EventReason.CommandRender:
+                    Renderer.SetCanvasSize(Project.FrameWidth, Project.FrameHeight);
+                    Canvas.Render();
                     break;
             }
         }

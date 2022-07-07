@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel;
 using SharpTracer.Base;
 using SharpTracer.View.Controls;
+using SharpTracer.Model.Base.Messaging;
 
 namespace SharpTracer.ViewModels
 {
@@ -46,10 +47,8 @@ namespace SharpTracer.ViewModels
 
             Ribbon = new RibbonVM();
             Icon = "";
-            Ribbon.Groups.Add(new RibbonGroupVM());
-            Ribbon.Add(new RibbonCommandVM("", "Render", "X", "", new Command(model.CanRender, model.Render)));
-
-            //SharpMessenger.ModelEvent += SharpTracerMessenger_ModelEvent;
+            Ribbon.Groups.Add(new RibbonGroupVM() { Title="Rendering"});
+            Ribbon.Add(new RibbonCommandVM("Rendering", "Render", "X", "Begins rendering a ray traced image.", new Command(model.CanRender, (x)=>RaiseEvent.UI(this, EventReason.CommandRender, x))));
         }
 
         private void ExecuteShowGizmos(object Parameter)

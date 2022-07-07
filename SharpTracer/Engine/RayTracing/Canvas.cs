@@ -4,6 +4,7 @@ using SharpTracer.Engine.Maths;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine.Scene.RenderGeometry;
 using SharpTracer.Model;
+using SharpTracer.Model.Base.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +16,6 @@ namespace SharpTracer.Engine.RayTracing
 {
     public class Canvas
     {
-        public event EventHandler<float> CanvasChanged;
-        public event EventHandler<EventArgs> RenderComplete;
         public Canvas()
         {
             _samples = 500;
@@ -39,6 +38,7 @@ namespace SharpTracer.Engine.RayTracing
                     _pixels[i * _width + j] = new vec4((1.0f / _height) * i, (1.0f / _width) * j, 0, 0);
                     _collected[i * _width + j] = new vec4(0);
                 }
+            RaiseEvent.Model(this, EventReason.RenderStarted, null);
             Task.Run(() =>
             {
                 _rendering = true;
@@ -55,11 +55,12 @@ namespace SharpTracer.Engine.RayTracing
                             u = (j + x) / _width;
                             v = (i + y) / _height;
                             SetPixel((int)j, (int)i, sample, GetColour(u, v));
+                            SetPixel((int)j, (int)i, sample, new vec4(1));
                         }
-                    CanvasChanged.Invoke(this, 1/_samples * sample);
+                   RaiseEvent.Model(this, EventReason.RenderUpdated, 1.0f/_samples * sample);
                 }
                 _rendering = false;
-                RenderComplete.Invoke(this, null);
+                RaiseEvent.Model(this, EventReason.RenderEnded, null);
             });
 
         }
@@ -128,11 +129,8 @@ namespace SharpTracer.Engine.RayTracing
             _renderGuard.ReleaseMutex();
         }
 
-        int GetWidth() { return _width; }
-        int GetHeight() { return _height; }
-
         #region Private
-        private Mutex _renderGuard;
+        private Mutex _renderGuard = new Mutex();
         int _width, _height;
         vec4[] _pixels, _collected;
         private int _samples;
