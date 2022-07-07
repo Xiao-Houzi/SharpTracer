@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SharpTracer"
+               xmlns:controls="clr-namespace:SharpTracer.View.Controls"
         mc:Ignorable="d" d:DesignWidth="340">
 	<UserControl.Resources>
 		<Style TargetType="TextBlock" x:Key="Matrix">
@@ -19,6 +20,11 @@
 				<TextBlock Text="{Binding Entity.PointCount}" FontSize="16"/>
 			</StackPanel>
 		</StackPanel>
+        <StackPanel DockPanel.Dock="Top" Background="DimGray" Height="100">
+            <Border BorderBrush="Orange">
+				<controls:ProgressBar Current="{Binding RenderPercantage}" Max="100.0" Caption="Rendering" Width="100" Height="50"/>
+            </Border>
+        </StackPanel>
 		<Grid DockPanel.Dock="Left" Margin="5">
 			
 		</Grid>

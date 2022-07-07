@@ -13,6 +13,15 @@ namespace SharpTracer.ViewModels
     public class ControlsVM : NotificationBase, ITabPage
     {
         public string Visibility { get; set; }
+        public float RenderPercentage
+        {
+            get => _renderPercentage;
+            set
+            {
+                RenderPercentage = value;
+                NotifyPropertyChanged();
+            }
+        }
         public string Title => "Controls";
         public string Icon { get; set; }
         public RibbonVM Ribbon { get; set; }
@@ -47,8 +56,8 @@ namespace SharpTracer.ViewModels
 
             Ribbon = new RibbonVM();
             Icon = "";
-            Ribbon.Groups.Add(new RibbonGroupVM() { Title="Rendering"});
-            Ribbon.Add(new RibbonCommandVM("Rendering", "Render", "X", "Begins rendering a ray traced image.", new Command(model.CanRender, (x)=>RaiseEvent.UI(this, EventReason.CommandRender, x))));
+            Ribbon.Groups.Add(new RibbonGroupVM() { Title = "Rendering" });
+            Ribbon.Add(new RibbonCommandVM("Rendering", "Render", "X", "Begins rendering a ray traced image.", new Command(model.CanRender, (x) => RaiseEvent.UI(this, EventReason.CommandRender, x))));
         }
 
         private void ExecuteShowGizmos(object Parameter)
@@ -69,5 +78,6 @@ namespace SharpTracer.ViewModels
         private CameraControlVM cloudPanel;
         private Command _showGizmos;
         private SharpTracerModel _model;
+        private float _renderPercentage;
     }
 }

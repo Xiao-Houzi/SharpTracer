@@ -6,22 +6,6 @@
         xmlns:local="clr-namespace:SharpTracer.View.Controls"
         mc:Ignorable="d"
 		d:DesignWidth="300" d:DesignHeight="50">
-    <UserControl.Resources>
-        <Style TargetType="FrameworkElement">
-            <Style.Triggers>
-                <Trigger Property="Visibility" Value="Hidden">
-                    <Setter Property="Visibility" Value="Visible"/>
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                             From="0.0" To="1.0" Duration="0:0:0.5"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
+
 </UserControl>
    

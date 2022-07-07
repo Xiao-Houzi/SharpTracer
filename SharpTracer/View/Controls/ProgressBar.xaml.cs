@@ -28,21 +28,101 @@ namespace SharpTracer.View.Controls
         }
         #endregion
 
-        #region Indicator
-        private Double _tickProportion = 0.2;
-        private int compass;
-        private bool active = false;
+        #region XamlProperties
+        public static readonly DependencyProperty BoxesProperty =
+                 DependencyProperty.Register("Boxes", typeof(int), typeof(ProgressBar));
+        public static readonly DependencyProperty TickProportionProperty =
+                 DependencyProperty.Register("TickProportion", typeof(float), typeof(ProgressBar));
+        public static readonly DependencyProperty MaxProperty =
+                 DependencyProperty.Register("Max", typeof(float), typeof(ProgressBar));
+        public static readonly DependencyProperty CurrentProperty =
+                 DependencyProperty.Register("Current", typeof(float), typeof(ProgressBar));
+        public static readonly DependencyProperty CaptionProperty =
+                 DependencyProperty.Register("Caption", typeof(string), typeof(ProgressBar));
+        public static readonly DependencyProperty CurrentProcessProperty =
+                 DependencyProperty.Register("CurrentProcess", typeof(string), typeof(ProgressBar));
+        public static readonly DependencyProperty BarColourProperty =
+                 DependencyProperty.Register("BarColor", typeof(SolidColorBrush), typeof(ProgressBar));
+        public static readonly DependencyProperty ProgressColourProperty =
+                 DependencyProperty.Register("ProgressColor", typeof(SolidColorBrush), typeof(ProgressBar));
 
-        private Timer tick;
-        private void TimerTick(object state)
+        public int Boxes
         {
-            Application.Current?.Dispatcher.Invoke(
-               () =>
-               {
-                   compass += 1;
-                   InvalidateVisual();
-               });
+            get=>_boxes; set { _boxes = value; NotifyPropertyChanged(); }
         }
+        public float TickProportion
+        {
+            get
+            {
+                return _tickProportion;
+            }
+            set
+            {
+                if (value > 1) _tickProportion = 1 / value;
+                else _tickProportion = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public float Max
+        {
+            get => _max;
+            set
+            {
+                _max = value; NotifyPropertyChanged();
+            }
+        }
+        public float Current
+        {
+            get => _current;
+            set
+            {
+                _current = value; NotifyPropertyChanged();
+            }
+        }
+        public string Caption
+        {
+            get => _caption;
+            set
+            {
+                _caption=value;
+                NotifyPropertyChanged();
+            }
+        }
+        public string CurrentProcess
+        {
+            get => _currentProcess;
+            set
+            {
+                _currentProcess = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public SolidColorBrush BarColor { get; set; } = null;
+        public SolidColorBrush ProgressColor { get; set; } = new SolidColorBrush(Colors.Lime);
+        #endregion
+
+        public ProgressBar() 
+        {
+            BarColor = Brushes.DimGray;
+            ProgressColor = Brushes.Yellow;
+
+            InitializeComponent();
+            InvalidateVisual();
+        }
+        ~ProgressBar()
+        {
+            _fadeOutTimer?.Dispose();
+        }
+
+        #region Private
+        private string _caption = "";
+        private string _currentProcess = "";
+        private float _max = 0;
+        private float _current = 0;
+        private int _boxes = 16;
+        private float _tickProportion = 0.25f;
+        private int compass = 0;
+        private bool active = false;
 
         private int _fadeDuration;
         private int _fadeCounter;
@@ -53,7 +133,7 @@ namespace SharpTracer.View.Controls
             {
                 _fadeOutTimer?.Change(0, 0);
                 _fadeOutTimer = null;
-                
+
             }
             else
             {
@@ -65,31 +145,10 @@ namespace SharpTracer.View.Controls
             }
         }
 
-        public int Boxes
-        {
-            get; set;
-        }
-        public double TickProportion
-        {
-            get
-            {
-                return _tickProportion;
-            }
-
-            set
-            {
-                if (value > 1) _tickProportion = 1 / value;
-                else _tickProportion = value;
-            }
-        }
-
-        public SolidColorBrush BarColor { get; set; } = null;
-        public SolidColorBrush ProgressColor { get; set; } = new SolidColorBrush(Colors.Lime);
-
         protected override void OnRender(DrawingContext DC)
         {
             base.OnRender(DC);
-            if (!active)
+            if (active)
             {
                 if (_fadeDuration != 0)
                 {
@@ -104,7 +163,7 @@ namespace SharpTracer.View.Controls
             Typeface t = new Typeface("calibri");
             FormattedText formattedCaption = new FormattedText(Caption, culture, FlowDirection.LeftToRight, t, 14, Brushes.White, 1);
 
-            FormattedText formattedItem = new FormattedText(Item, culture, FlowDirection.LeftToRight, t, 12, Brushes.White, 1);
+            FormattedText formattedItem = new FormattedText(CurrentProcess, culture, FlowDirection.LeftToRight, t, 12, Brushes.White, 1);
 
             Double width = ActualWidth - 4;
             Double height = 16;
@@ -137,19 +196,18 @@ namespace SharpTracer.View.Controls
             DC.Pop();
         }
 
-        public void Start()
+        private void Start()
         {
             active = true;
-            tick?.Change(0, 1000 / Boxes);
             _fadeOutTimer = null;
         }
 
-        public void Stop()
+        private void Stop()
         {
             if (active)
             {
                 Caption = Caption += " Complete";
-                Item = "";
+                CurrentProcess = "";
                 Current = 0;
                 Max = 1;
                 int fadeInterval = 100;
@@ -157,128 +215,8 @@ namespace SharpTracer.View.Controls
                 _fadeCounter = 0;
                 _fadeDuration = 2000 / fadeInterval;
                 active = false;
-                tick?.Change(0, 0);
-            }
-
-        }
-        #endregion
-
-
-        #region fields
-        static int _id = 0;
-        private UInt64 startEventID = 0;
-        private string Caption = "";
-        private string Item = "";
-        private int _max;
-        private int _current;
-        #endregion
-
-        #region Properties
-        public int ID
-        {
-            get;
-        }
-        public int Max
-        {
-            get => _max;
-            set
-            {
-                _max = value; NotifyPropertyChanged();
-            }
-        }
-        public int Current
-        {
-            get => _current;
-            set
-            {
-                _current = value; NotifyPropertyChanged();
             }
         }
         #endregion
-
-        #region constructors
-        public ProgressBar()
-        {
-            DataContext = this;
-            TickProportion = 0.25;
-            compass = 0;
-            Boxes = 16;
-
-            BarColor = Brushes.DimGray;
-
-            ProgressColor = Brushes.Yellow;
-
-            ID = _id++;
-            tick = new Timer(TimerTick, this, 0, 0);
-            Messenger.ProgressEvent += Messenger_ProgressEvent;
-        }
-
-        public ProgressBar(string caption, string item, int max) : this()
-        {
-            Max = max;
-            Current = 0;
-            Item = item;
-            Caption = caption;
-            InitializeComponent();
-            InvalidateVisual();
-        }
-
-        ~ProgressBar()
-        {
-            tick?.Dispose();
-            _fadeOutTimer?.Dispose();
-        }
-        #endregion
-
-        private void Messenger_ProgressEvent(object sender, ProgressArgs args)
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                if (args.ProgressID != ID) return;
-                if (args.EventID < startEventID) return;
-                Item = args.Message;
-                switch (args.Status)
-                {
-                    case Status.Start:
-                        Max = args.Max;
-                        Current = 0;
-                        Caption = args.Caption;
-                        startEventID = args.EventID;
-                        Start();
-                        break;
-
-                    case Status.Stop:
-                        Stop();
-                        break;
-
-                    case Status.Increment:
-                        Current++;
-                        goto case Status.Update;
-
-                    case Status.Update:
-                        if (Current >= Max) goto case Status.Stop;
-                        break;
-
-                    case Status.Clear:
-                        Clear();
-                        break;
-                }
-                InvalidateVisual();
-            });
-        }
-
-        private void Clear()
-        {
-            Caption = "";
-            Item = "";
-            Current = 0;
-            Max = 0;
-        }
-
-        public static ProgressBar Create(string caption, string item, int max)
-        {
-            return new ProgressBar(caption, item, max);
-        }
-
     }
 }
