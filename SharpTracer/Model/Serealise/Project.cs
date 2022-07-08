@@ -5,11 +5,10 @@ using SharpEngine.Maths;
 using SharpTracer.Base;
 using SharpTracer.Engine.Scene;
 using System.Collections.Generic;
-using Range = SharpEngine.Maths.Range;
 using SharpTracer.Engine;
 using SharpTracer.Model.Base.Messaging;
-using SharpTracer.Engine.Scene.RenderGeometry;
-using GlmSharp;
+using Range = SharpEngine.Maths.Range;
+using SharpTracer.Engine.GLAbstraction;
 
 namespace SharpTracer.Model
 {
@@ -35,9 +34,9 @@ namespace SharpTracer.Model
         { get => _sceneCamera; set => _sceneCamera = value; }
         public Camera ViewCamera
         { get => _viewCamera; set => _viewCamera = value; }
-        public int FrameWidth
+        public uint FrameWidth
         { get; set; }
-        public int FrameHeight
+        public uint FrameHeight
         { get; set; }
         public String Name
         {
@@ -73,7 +72,7 @@ namespace SharpTracer.Model
                     break;
 
                 case EventReason.AddedEntity:
-                    AddEntity();
+                    AddEntity((Geometry)args.DataObject);
                     break;
             }
         }
@@ -102,11 +101,11 @@ namespace SharpTracer.Model
         {
             throw new NotImplementedException();
         }
-        private void AddEntity()
+        private void AddEntity(Geometry geometry)
         {
-            string type = "Sphere";
+            
             int number = 0;
-            Entity entity = new Entity($"{type}{number}", new MeshSphere(), new Material());
+            Entity entity = new Entity($"{geometry.Name}{number}", geometry, new Material());
 
             Entities.Add(entity);
         }

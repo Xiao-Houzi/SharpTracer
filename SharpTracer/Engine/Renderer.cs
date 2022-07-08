@@ -26,8 +26,8 @@ namespace SharpTracer.Engine
         { get; set; }
         public float Time
         { get; set; }
-        public int CanvasWidth { get => _canvasWidth; }
-        public int CanvasHeight { get => _canvasHeight; }
+        public uint CanvasWidth { get => _canvasWidth; }
+        public uint CanvasHeight { get => _canvasHeight; }
         public float AspectRatio
         { get => _canvasHeight / _canvasWidth; }
         public bool RenderingCanvas { get;  set; }
@@ -132,7 +132,7 @@ namespace SharpTracer.Engine
         internal void UpdateCanvasImage(byte[] bytes)
         {
             uint textureSlot = _canvas.Material.Texture[0];
-            GLLayer.UploadTexture(CanvasWidth, CanvasHeight, bytes, textureSlot);
+            GLLayer.UpdateTexture(CanvasWidth, CanvasHeight, bytes, textureSlot);
         }
 
         public void Cleanup()
@@ -181,14 +181,14 @@ namespace SharpTracer.Engine
         {
         }
 
-        public void SetViewSize(int width, int height)
+        public void SetViewSize(uint width, uint height)
         {
             GLLayer.UpdateWindowSize(width, height);
             _viewWidth = width;
             _viewHeight = height;
             RecalculateCanvasDimensions();
         }
-        public void SetCanvasSize(int width, int height)
+        public void SetCanvasSize(uint width, uint height)
         {
             _canvasWidth = width;
             _canvasHeight = height;
@@ -239,7 +239,7 @@ namespace SharpTracer.Engine
         protected float _delta;
         private List<float> _frameTimes;
         private Point _lastPosition;
-        private int _canvasWidth=1, _canvasHeight=1, _viewWidth = 1, _viewHeight = 1;
+        private uint _canvasWidth=1, _canvasHeight=1, _viewWidth = 1, _viewHeight = 1;
         private Project _project;
         private Camera _camera;
         #endregion

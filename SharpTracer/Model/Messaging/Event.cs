@@ -37,7 +37,7 @@ namespace SharpTracer.Model.Base.Messaging
         ChangedGeometry,
         ChangedViewCamera,
         GLIsNull,
-        GAcquired,
+        GLAcquired,
         AcquireGL,
         ProjectLoaded,
         SafeToClose,
@@ -45,6 +45,7 @@ namespace SharpTracer.Model.Base.Messaging
         LoadProject,
         ResetViewCamera,
         RendererInitialised,
+        CommandAddEntity,
     }
     internal class Event : RaiseEvent
     {

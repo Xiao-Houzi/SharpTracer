@@ -5,8 +5,9 @@ using GlmSharp;
 using System.Threading;
 using SharpTracer.Engine.Scene;
 using SharpTracer.Engine.Scene.RenderGeometry;
-using SharpEngine.Engine;
-using SharpTracer.Model;
+using SharpTracer.Model.Base.Messaging;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace SharpTracer.Engine.GLAbstraction
 {
@@ -15,8 +16,9 @@ namespace SharpTracer.Engine.GLAbstraction
 		public static OpenGL GL;
 		public static Shaders Shaders
 		{ get => _shaders; set => _shaders = value; }
-		// other attributes
-
+		public static List<Geometry> Geometry
+		{ get; set; }
+		
 
 		static GLLayer()
 		{
@@ -42,10 +44,21 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.BlendFunc(OpenGL.GL_SRC_ALPHA, OpenGL.GL_ONE_MINUS_SRC_ALPHA);
 
 			GL.Hint(OpenGL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL_FASTEST);
+
+			InitialiseGeometry();
+
+			RaiseEvent.Model(null, EventReason.GLAcquired, null);
 			return true;
 		}
 
-		public static void UpdateWindowSize(int width, int height)
+		private static void InitialiseGeometry()
+		{
+			Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+			IEnumerable<Type> geomTypes = types.Where((x) => x.IsSubclassOf(typeof(Geometry)));
+			Geometry = geomTypes.Select((x) => Activator.CreateInstance(x) as Geometry).ToList();
+		}
+
+		public static void UpdateWindowSize(uint width, uint height)
 		{
 			_width = width;
 			_height = height;
@@ -92,16 +105,12 @@ namespace SharpTracer.Engine.GLAbstraction
 
 			// Draw the object
 			GL.BindVertexArray(geometry.VAO[0]);
-			GL.ActiveTexture(OpenGL.GL_TEXTURE0);
-			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[0]);
-			GL.ActiveTexture(OpenGL.GL_TEXTURE1);
-			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[1]);
-			GL.ActiveTexture(OpenGL.GL_TEXTURE2);
-			GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[2]);
 
-			for (int i = 0; i < entity.Material.Texture.Length; i++)
+			for (uint i = 0; i < entity.Material.Texture.Length; i++)
 			{
-                texture[i] = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, $"texture{i}");
+				GL.ActiveTexture(OpenGL.GL_TEXTURE0 + i);
+				GL.BindTexture(OpenGL.GL_TEXTURE_2D, entity.Material.Texture[i]);
+				texture[i] = GL.GetUniformLocation(_shaders.Program(entity.Material.Shader).ProgramID, $"texture{i}");
 				GL.Uniform1(texture[i], entity.Material.Texture[i]);
 			}
 
@@ -145,12 +154,19 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.GenTextures(1, textureID);
 			return textureID[0];
 		}
-		public static void UploadTexture(int width, int height, byte[] data, uint textureID)
+
+		public static void UpdateTexture(uint width, uint height, byte[] data, uint textureID)
         {
+			_updates.Add(new Update(width, height, data, textureID));
+        }
+		private static void UploadTexture(uint width, uint height, byte[] data, uint textureID)
+        {
+			_renderGuard.WaitOne();
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID);
-			GL.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA, width, height, 0, OpenGL.GL_RGBA, OpenGL.GL_BYTE, data);
+			GL.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA, (int)width, (int)height, 0, OpenGL.GL_RGBA, OpenGL.GL_BYTE, data);
 			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
 			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+			_renderGuard.ReleaseMutex();
 		}
 
 		static mat4 ModelMatrix(Entity entity, Geometry image)
@@ -226,9 +242,10 @@ namespace SharpTracer.Engine.GLAbstraction
 		Entity _gizmo = new Entity("Compass", new Gizmo(), new Material());
 		Entity _centroid = new Entity("Centroid", new Gizmo(), new Material(), null);
 
+		private static List<Update> _updates;
 		private static Shaders _shaders;
-		private static int _width;
-		private static int _height;
+		private static uint _width;
+		private static uint _height;
 		private static float _aspect;
 		public static Mutex _renderGuard = new Mutex();
 		#endregion

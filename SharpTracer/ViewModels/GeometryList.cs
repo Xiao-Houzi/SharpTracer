@@ -1,6 +1,7 @@
 ﻿using SharpTracer.Base;
 using SharpTracer.Engine.GLAbstraction;
 using SharpTracer.Engine.Scene;
+using SharpTracer.Engine.Scene.RenderGeometry;
 using SharpTracer.Model.Base.Messaging;
 using SharpTracer.View.Controls;
 using System;
@@ -43,7 +44,7 @@ namespace SharpTracer.ViewModels
             get
             {
                 List<Entity> entites = new List<Entity>();
-                foreach (Entity l in Model.Geometry)
+                foreach (Entity l in Model.Entities)
                     entites.AddRange(l.FetchDescendants());
                 return entites;
             }
@@ -70,9 +71,11 @@ namespace SharpTracer.ViewModels
             Model = model;
             Ribbon = new RibbonVM();
             _content = new GeometryListView() { DataContext = this };
-            _title = "Geometry View";
+            _title = "Entity List";
             Icon = "";
-            Ribbon.Add(new RibbonCommandVM("", "X", "X", "", new Command(() => true, execute)));
+            Ribbon.Add(new RibbonCommandVM("Entity", "Add\nSphere", "X", "", new Command(() => true, (x)=>RaiseEvent.UI(this, EventReason.CommandAddEntity, typeof(MeshSphere)))));
+            Ribbon.Add(new RibbonCommandVM("Entity", "Add\nCube", "X", "", new Command(() => true, (x) => RaiseEvent.UI(this, EventReason.CommandAddEntity, typeof(MeshSphere)))));
+            Ribbon.Add(new RibbonCommandVM("Entity", "Add", "X", "", new Command(() => true, (x) => RaiseEvent.UI(this, EventReason.CommandAddEntity, typeof(MeshSphere)))));
 
             Messenger.ModelEvent += SharpTracerMessenger_ModelEvent;
         }
@@ -87,14 +90,6 @@ namespace SharpTracer.ViewModels
             }
         }
 
-        private void execute(object Parameter)
-        {
-            MessageDialog dlg = new MessageDialog()
-            {
-                Content = "Don't just press weird buttons, are you mad?"
-            };
-            dlg.Show();
-        }
 
         public void Update()
         {

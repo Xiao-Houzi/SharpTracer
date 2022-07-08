@@ -7,7 +7,7 @@ namespace SharpTracer.Engine.Scene.RenderGeometry
 {
 	public class MeshPlane : Geometry
 	{
-
+		public string Name { get => "Geometry"; }
 		public MeshPlane() : base("Plane")
 		{
 			OpenGL gl = GLLayer.GL;

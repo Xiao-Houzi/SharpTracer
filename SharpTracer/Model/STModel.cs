@@ -12,6 +12,9 @@ using SharpTracer.Engine.Scene;
 using SharpTracer.Engine;
 using SharpTracer.Engine.RayTracing;
 using SharpTracer.Model.Base.Messaging;
+using SharpTracer.Engine.GLAbstraction;
+using System.Reflection;
+using System.Linq;
 
 namespace SharpTracer
 {
@@ -25,13 +28,14 @@ namespace SharpTracer
         { get; set; }
         public Canvas Canvas
         { get; set; }
-        public List<Entity> Geometry
+        public List<Entity> Entities
         {
             get => Project.Entities; set
             {
                 Project.Entities = value; NotifyPropertyChanged("Geometry");
             }
         }
+
         public static Dictionary<string, bool> Keys
         {
             get;
@@ -79,7 +83,7 @@ namespace SharpTracer
         #region Commands
         internal bool CanRender()
         {
-            return true;
+            return _project.Entities.Count > 0;
         }
 
         #endregion
@@ -96,8 +100,8 @@ namespace SharpTracer
                     Event.Model(this, EventReason.AcquireGL, "");
                     break;
 
-                case EventReason.GAcquired:
-                    //GLAcquiredDelegate.Start();
+                case EventReason.GLAcquired:
+
                     break;
 
                 case EventReason.RenderStarted:
@@ -150,6 +154,11 @@ namespace SharpTracer
                 case EventReason.CommandRender:
                     Renderer.SetCanvasSize(Project.FrameWidth, Project.FrameHeight);
                     Canvas.Render();
+                    break;
+
+                case EventReason.CommandAddEntity:
+                    Geometry geometry = (from Geometry g in GLLayer.Geometry where  g.GetType() == args.DataObject  select g).ToList().FirstOrDefault();
+                    RaiseEvent.Model(this, EventReason.AddedEntity, geometry);
                     break;
             }
         }

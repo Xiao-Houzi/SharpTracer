@@ -172,7 +172,7 @@ namespace SharpTracer.ViewModels
                         break;
                     case EventReason.AcquireGL:
                         while (GL == null) { }
-                        Event.Model(this, EventReason.GAcquired, GL);
+                        Event.Model(this, EventReason.GLAcquired, GL);
                         break;
                     case EventReason.ProjectLoaded:
                         _expandablePanel.Tabs[0].Update();

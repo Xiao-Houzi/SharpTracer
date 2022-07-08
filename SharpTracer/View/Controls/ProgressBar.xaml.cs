@@ -117,7 +117,7 @@ namespace SharpTracer.View.Controls
         #region Private
         private string _caption = "";
         private string _currentProcess = "";
-        private float _max = 0;
+        private float _max = 100;
         private float _current = 0;
         private int _boxes = 16;
         private float _tickProportion = 0.25f;

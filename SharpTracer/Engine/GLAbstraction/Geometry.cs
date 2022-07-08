@@ -15,17 +15,22 @@ namespace SharpTracer.Engine.GLAbstraction
 
 	public class Geometry
 	{
+		public string Name { get => _name; }
 		public int IndexCount
 		{ get { return _indices; } }
 		public uint[] VAO
 		{ get { return _vao; } }
 
-		public Geometry(String name)
-		{
-			_name = name;
+		public Geometry()
+        {
+			_name = "Empty";
 			_vao = new uint[] { uint.MaxValue };
 			_buffers = new uint[2];
 			_indices = 0;
+		}
+		public Geometry(String name) : this()
+		{
+			_name = name;
 		}
 
 		~Geometry()
