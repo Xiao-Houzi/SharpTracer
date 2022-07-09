@@ -84,7 +84,7 @@ namespace SharpEngine
 
         private void UserControl_Loaded(object sender, RoutedEventArgs args)
         {
-            Renderer?.SetViewSize((int)ActualWidth, (int)ActualHeight);
+            Renderer?.SetViewSize((uint)ActualWidth, (uint)ActualHeight);
         }
 
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
@@ -119,7 +119,7 @@ namespace SharpEngine
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Renderer?.SetViewSize((int)ActualWidth, (int)ActualHeight);
+            Renderer?.SetViewSize((uint)ActualWidth, (uint)ActualHeight);
         }
 
         [DllImport("User32.dll")]

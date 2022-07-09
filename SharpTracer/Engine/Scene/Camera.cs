@@ -115,8 +115,6 @@ namespace SharpTracer.Engine
             return new Ray(_O + offset, _LL + s * _H + t * _V - _O - offset, time);
         }
 
-     
-
         public void Aspect(int width, int height)
         {
             _aspect = width/height;

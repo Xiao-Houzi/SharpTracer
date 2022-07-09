@@ -52,7 +52,11 @@ namespace SharpTracer
         public bool ShowTools { get; set; }
         public bool IsRendering { get; private set; }
         public bool RenderComplete { get; private set; }
-        public float RenderPercent { get; private set; }
+        public float RenderPercent
+        { 
+            get=>_renderPercent; 
+            private set { _renderPercent = value; NotifyPropertyChanged(); } 
+        }
 
         #endregion
 
@@ -128,7 +132,6 @@ namespace SharpTracer
             switch (args.Reason)
             {
                 case EventReason.CommandCloseApp:
-                    
                     break;
 
                 case EventReason.CommandClear:
@@ -189,6 +192,7 @@ namespace SharpTracer
         private GeometryViewControls _cloudViewControls;
         private Uri path;
         private System.Threading.Mutex loadMutex = new System.Threading.Mutex();
+        private float _renderPercent;
         #endregion
     }
 }

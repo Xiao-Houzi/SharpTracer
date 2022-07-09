@@ -14,6 +14,12 @@ namespace SharpTracer.Engine.GLAbstraction
             Geometry
         }
 
+
+        internal UpdateType Type { get => _type;}
+        public uint[] Values { get => _values; set => _values = value; }
+        public uint Id { get => _id; set => _id = value; }
+        public byte[] Data { get => _data; set => _data = value; }
+
         public Update(uint width, uint height, byte[]data, uint id)
         {
             _type = UpdateType.Texture;
@@ -32,6 +38,7 @@ namespace SharpTracer.Engine.GLAbstraction
         private uint _id;
         private uint[] _values;
         private UpdateType _type;
+
         #endregion
     }
 }

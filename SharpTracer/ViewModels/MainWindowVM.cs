@@ -119,7 +119,6 @@ namespace SharpTracer.ViewModels
             _model.Renderer = _renderer;
             ExpandablePanel = new ExpandablePanelVM(340);
 
-            Controls = new ControlsVM(model);
             Status = new StatusVM(model);
             Entitys = new ObservableCollection<Entity>();
 

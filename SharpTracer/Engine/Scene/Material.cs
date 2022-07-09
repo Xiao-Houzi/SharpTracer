@@ -30,6 +30,8 @@ namespace SharpTracer.Engine.Scene
             Shader = "Default";
             Colour = new vec4(1);
             _textures = new uint[16];
+            albedo = new TextureConstant(new vec4(1.0f, 0.0f, 1.0f, 1.0f));
+            emit = new TextureConstant(new vec4(0.9f, 0.9f, 0.9f, 1.0f));
         }
         public void SetColour(vec4 colour, int slot = 0)
         {

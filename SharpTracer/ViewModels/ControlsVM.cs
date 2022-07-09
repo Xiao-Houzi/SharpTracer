@@ -18,7 +18,7 @@ namespace SharpTracer.ViewModels
             get => _renderPercentage;
             set
             {
-                RenderPercentage = value;
+                _renderPercentage = value*100.0f;
                 NotifyPropertyChanged();
             }
         }
@@ -58,6 +58,24 @@ namespace SharpTracer.ViewModels
             Icon = "";
             Ribbon.Groups.Add(new RibbonGroupVM() { Title = "Rendering" });
             Ribbon.Add(new RibbonCommandVM("Rendering", "Render", "X", "Begins rendering a ray traced image.", new Command(model.CanRender, (x) => RaiseEvent.UI(this, EventReason.CommandRender, x))));
+
+            Messenger.UIEvent += HandleUIEvent;
+            Messenger.ModelEvent += HandleModelEvent;
+        }
+
+        private void HandleModelEvent(object sender, ModelArgs args)
+        {
+            switch(args.Reason)
+            {
+                case EventReason.RenderUpdated:
+                    RenderPercentage = (float)args.DataObject;
+                    break;
+            }
+        }
+
+        private void HandleUIEvent(object sender, UIArgs args)
+        {
+
         }
 
         private void ExecuteShowGizmos(object Parameter)

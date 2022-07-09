@@ -22,7 +22,7 @@
 		</StackPanel>
         <StackPanel DockPanel.Dock="Top" Background="DimGray" Height="100">
             <Border BorderBrush="Orange">
-				<controls:ProgressBar Current="{Binding RenderPercantage}" Max="100.0" Caption="Rendering" Width="100" Height="50"/>
+                <controls:ProgressBar Current="{Binding RenderPercentage}" Max="100.0" Caption="Rendering" Width="300" Height="50"/>
             </Border>
         </StackPanel>
 		<Grid DockPanel.Dock="Left" Margin="5">

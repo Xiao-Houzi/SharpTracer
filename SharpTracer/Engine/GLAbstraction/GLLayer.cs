@@ -72,6 +72,18 @@ namespace SharpTracer.Engine.GLAbstraction
 			GL.ClearColor(0.025f, 0.05f, 0.10f,1);
 			GL.Clear(OpenGL.GL_COLOR_BUFFER_BIT | OpenGL.GL_DEPTH_BUFFER_BIT);
 
+			if (_updateGuard.WaitOne())
+			{
+				foreach (Update update in _updates)
+					switch (update.Type)
+					{
+						case Update.UpdateType.Texture:
+							UploadTexture(update.Values[0], update.Values[1], update.Data, update.Id);
+							break;
+					}
+				_updates.Clear();
+				_updateGuard.ReleaseMutex();
+			}
 			//draw background
 		}
 
@@ -157,16 +169,24 @@ namespace SharpTracer.Engine.GLAbstraction
 
 		public static void UpdateTexture(uint width, uint height, byte[] data, uint textureID)
         {
+			_updateGuard.WaitOne();
 			_updates.Add(new Update(width, height, data, textureID));
+			_updateGuard.ReleaseMutex();
         }
 		private static void UploadTexture(uint width, uint height, byte[] data, uint textureID)
         {
-			_renderGuard.WaitOne();
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID);
 			GL.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA, (int)width, (int)height, 0, OpenGL.GL_RGBA, OpenGL.GL_BYTE, data);
 			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
 			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
-			_renderGuard.ReleaseMutex();
+		}
+
+		private static void UpdateTextureData(uint width, uint height, byte[] data, uint textureID)
+		{
+			int[] ints = new int[data.Length / 4];
+			for (int i = 0; i < data.Length / 4; i++) ints[i] = data[i * 4 + 0] + data[i * 4 + 1] + data[i * 4 + 2] + data[i * 4 + 3];
+			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID);
+			GL.TexSubImage2D(OpenGL.GL_TEXTURE_2D, 0, 0,0, (int)width, (int)height, (int)OpenGL.GL_RGBA, OpenGL.GL_BYTE, ints);
 		}
 
 		static mat4 ModelMatrix(Entity entity, Geometry image)
@@ -242,12 +262,13 @@ namespace SharpTracer.Engine.GLAbstraction
 		Entity _gizmo = new Entity("Compass", new Gizmo(), new Material());
 		Entity _centroid = new Entity("Centroid", new Gizmo(), new Material(), null);
 
-		private static List<Update> _updates;
+		private static List<Update> _updates = new List<Update>();
 		private static Shaders _shaders;
 		private static uint _width;
 		private static uint _height;
 		private static float _aspect;
 		public static Mutex _renderGuard = new Mutex();
+		public static Mutex _updateGuard = new Mutex();
 		#endregion
 	}
 }

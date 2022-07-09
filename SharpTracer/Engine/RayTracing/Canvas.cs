@@ -18,7 +18,7 @@ namespace SharpTracer.Engine.RayTracing
     {
         public Canvas()
         {
-            _samples = 500;
+            _samples = 50;
         }
 
         public void Initialise(Project project)
@@ -55,9 +55,9 @@ namespace SharpTracer.Engine.RayTracing
                             u = (j + x) / _width;
                             v = (i + y) / _height;
                             SetPixel((int)j, (int)i, sample, GetColour(u, v));
-                            SetPixel((int)j, (int)i, sample, new vec4(1));
+                            //SetPixel((int)j, (int)i, sample, new vec4(1.f));
                         }
-                   RaiseEvent.Model(this, EventReason.RenderUpdated, 1.0f/_samples * sample);
+                   RaiseEvent.Model(this, EventReason.RenderUpdated, (1.0f/_samples) * sample);
                 }
                 _rendering = false;
                 RaiseEvent.Model(this, EventReason.RenderEnded, null);
@@ -73,10 +73,10 @@ namespace SharpTracer.Engine.RayTracing
             int index = 0;
             foreach (vec4 v in data)
             {
-                bytes[index + 0] = (byte)(v.r * 255);
-                bytes[index + 0] = (byte)(v.r * 255);
-                bytes[index + 0] = (byte)(v.r * 255);
-                bytes[index + 0] = (byte)(v.r * 255);
+                bytes[index + 0] = (byte)(v.r * 127);
+                bytes[index + 1] = (byte)(v.g * 127);
+                bytes[index + 2] = (byte)(v.b * 127);
+                bytes[index + 3] = (byte)(v.a * 127);
                 index += 4;
             }
             return bytes;
@@ -89,7 +89,7 @@ namespace SharpTracer.Engine.RayTracing
 
         vec4 Colour(Ray ray, int bounce = 0)
         {
-            Hit hit = null;
+            Hit hit = new Hit();
 
             bool isHit = false;
             float max = 1000.0f;
@@ -105,10 +105,11 @@ namespace SharpTracer.Engine.RayTracing
             if (isHit)
             {
                 Ray scattered = null;
-                vec4 attenuation = new vec4(0);
+                vec4 attenuation = new vec4(1);
                 vec4 emitted = hit.Material.Emmited(hit.u, hit.v, ref hit.p);
                 if (bounce < 50 && hit.Material.Scattered(ray, hit, ref attenuation, ref scattered))
-                    return emitted + attenuation * Colour(scattered, bounce + 1);
+                    return new vec4(1,0,1,1);
+                    //return emitted + attenuation * Colour(scattered, bounce + 1);
                 else
                     return emitted;
             }
@@ -123,6 +124,7 @@ namespace SharpTracer.Engine.RayTracing
 
         void SetPixel(int x, int y, int sample, vec4 colour)
         {
+            colour.a = 1;
             _collected[y * _width + x] += colour;
             _renderGuard.WaitOne();
             _pixels[y * _width + x] = _collected[y * _width + x] / (float)(sample + 1.0f);
@@ -131,7 +133,7 @@ namespace SharpTracer.Engine.RayTracing
 
         #region Private
         private Mutex _renderGuard = new Mutex();
-        int _width, _height;
+        uint _width, _height;
         vec4[] _pixels, _collected;
         private int _samples;
         private bool _rendering;
