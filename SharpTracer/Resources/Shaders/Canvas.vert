@@ -12,5 +12,6 @@ out vec2 uv;
 void main()
 {
     vec4 Pos = uModelMatrix * vec4(Position, 1.0);
+    uv=UV;
     gl_Position = Pos;
 }

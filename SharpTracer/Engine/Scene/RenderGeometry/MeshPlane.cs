@@ -13,7 +13,7 @@ namespace SharpTracer.Engine.Scene.RenderGeometry
 			OpenGL gl = GLLayer.GL;
 			// initialise geometry
 			float[] vertexPositions =
-				  {// X			Y			Z			R			G			B			A			U			V			Nx		Ny		nZ	
+				  {//  X			   Y			Z			    R			  G			B			  A			U			  V			Nx		Ny		nZ	
 						-1f,        -1f,        +0f,        .1f,        .15f,       .2f,        0.5f,       0.0f,       0.0f,
 						+1f,        -1f,        +0f,        .1f,        .15f,       .2f,        1.0f,      1.0f,      0.0f,
 						+1f,        +1f,        +0f,        .1f,        .15f,       .2f,        0.5f,      1.0f,      1.0f,

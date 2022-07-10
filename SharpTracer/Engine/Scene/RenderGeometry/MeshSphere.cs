@@ -171,7 +171,7 @@ namespace SharpTracer.Engine.Scene.RenderGeometry
         }
 
         #region Private
-        float _radius;
+        float _radius = 1.0f;
         #endregion
     }
 

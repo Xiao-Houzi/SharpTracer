@@ -45,6 +45,7 @@ namespace SharpTracer.Engine.RayTracing
                 float u, v;
                 for (int sample = 0; sample < _samples; sample++)
                 {
+                    _sample = sample;
                     for (float i = 0; i < _height; i++)
                         for (float j = 0; j < _width; j++)
                         {
@@ -54,7 +55,8 @@ namespace SharpTracer.Engine.RayTracing
                             float y = Noise.Random1() - 0.5f;
                             u = (j + x) / _width;
                             v = (i + y) / _height;
-                            SetPixel((int)j, (int)i, sample, GetColour(u, v));
+                            vec4 col = GetColour(u, v);
+                            SetPixel((int)j, (int)i, sample,col);
                             //SetPixel((int)j, (int)i, sample, new vec4(1.f));
                         }
                    RaiseEvent.Model(this, EventReason.RenderUpdated, (1.0f/_samples) * sample);
@@ -104,12 +106,12 @@ namespace SharpTracer.Engine.RayTracing
 
             if (isHit)
             {
+
                 Ray scattered = null;
                 vec4 attenuation = new vec4(1);
                 vec4 emitted = hit.Material.Emmited(hit.u, hit.v, ref hit.p);
                 if (bounce < 50 && hit.Material.Scattered(ray, hit, ref attenuation, ref scattered))
-                    return new vec4(1,0,1,1);
-                    //return emitted + attenuation * Colour(scattered, bounce + 1);
+                    return emitted + attenuation * Colour(scattered, bounce + 1);
                 else
                     return emitted;
             }
@@ -118,7 +120,6 @@ namespace SharpTracer.Engine.RayTracing
             float t = 0.5f * (d.y + 1.0f);
 
             // background
-            return new vec4(0);
             return Tools.Interp(new vec4(1.0f), new vec4(0.5f, 0.7f, 1.0f, 1.0f), t);
         }
 
@@ -127,7 +128,7 @@ namespace SharpTracer.Engine.RayTracing
             colour.a = 1;
             _collected[y * _width + x] += colour;
             _renderGuard.WaitOne();
-            _pixels[y * _width + x] = _collected[y * _width + x] / (float)(sample + 1.0f);
+            _pixels[y * _width + x] =  _collected[y * _width + x] / (float)(sample + 1.0f);
             _renderGuard.ReleaseMutex();
         }
 
@@ -135,7 +136,7 @@ namespace SharpTracer.Engine.RayTracing
         private Mutex _renderGuard = new Mutex();
         uint _width, _height;
         vec4[] _pixels, _collected;
-        private int _samples;
+        private int _samples, _sample;
         private bool _rendering;
         private Project _project;
         #endregion

@@ -164,6 +164,9 @@ namespace SharpTracer.Engine.GLAbstraction
         {
 			uint[] textureID = new uint[1];
 			GL.GenTextures(1, textureID);
+			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID[0]);
+			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
+			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
 			return textureID[0];
 		}
 
@@ -177,8 +180,7 @@ namespace SharpTracer.Engine.GLAbstraction
         {
 			GL.BindTexture(OpenGL.GL_TEXTURE_2D, textureID);
 			GL.TexImage2D(OpenGL.GL_TEXTURE_2D, 0, (int)OpenGL.GL_RGBA, (int)width, (int)height, 0, OpenGL.GL_RGBA, OpenGL.GL_BYTE, data);
-			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MIN_FILTER, OpenGL.GL_NEAREST);
-			GL.TexParameter(OpenGL.GL_TEXTURE_2D, OpenGL.GL_TEXTURE_MAG_FILTER, OpenGL.GL_NEAREST);
+
 		}
 
 		private static void UpdateTextureData(uint width, uint height, byte[] data, uint textureID)
